@@ -1,6 +1,6 @@
 module "eks" {
   source       = "terraform-aws-modules/eks/aws"
-  cluster_name = "test-eks-cluster"
+  cluster_name = "${local.cluster_name}"
   subnets      = ["${module.vpc.private_subnets}"]
 
   tags = {
