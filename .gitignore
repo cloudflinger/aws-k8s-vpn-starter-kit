@@ -7,3 +7,8 @@
 
 # .tfvars files
 *.tfvars
+
+plan
+plan.out
+
+kubeconfig*
