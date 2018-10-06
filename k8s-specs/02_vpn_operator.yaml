@@ -1,0 +1,133 @@
+# NOTE: these should be coming from the openvpn operator repo. it just doesn't exist yet
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: openvpn.brain.cloudflinger.com
+spec:
+  group: brain.cloudflinger.com
+  names:
+    kind: Openvpn
+    listKind: OpenvpnList
+    plural: openvpn
+    singular: openvpn
+  scope: Namespaced
+  version: v1alpha1
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  name: openvpn-operator.v0.0.1
+spec:
+  version: 0.0.1
+  displayName: Openvpn w/ Ldap
+  provider:
+    name: Cloudflinger
+    url: www.cloudflinger.com
+  maturity: alpha
+  version: 0.0.1
+  maintainers:
+    - email: jake@cloudflinger.com
+      name: Cloudflinger
+  labels:
+    olm-owner-enterprise-app: openvpn-operator
+    olm-status-descriptors: openvpn-operator.v0.0.1
+  description: Openvpn w/ Ldap support
+  install:
+    strategy: deployment
+    spec:
+      permissions:
+      - serviceAccountName: openvpn-operator
+        rules:
+        - apiGroups:
+          - brain.cloudflinger.com
+          resources:
+          - "*"
+          verbs:
+          - "*"
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          - namespaces
+          verbs:
+          - "*"
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - "*"
+      deployments:
+      - name: openvpn-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: openvpn-operator
+          template:
+            metadata:
+              labels:
+                app: openvpn-operator
+            spec:
+              containers:
+                - name: openvpn-operator-olm-owned
+                  image: cloudflinger/openvpn-operator
+                  imagePullPolicy: Always
+                  env:
+                  - name: MY_POD_NAMESPACE
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.namespace
+                  - name: WATCH_NAMESPACE
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.namespace
+                  - name: MY_POD_NAME
+                    valueFrom:
+                      fieldRef:
+                        fieldPath: metadata.name
+              restartPolicy: Always
+              terminationGracePeriodSeconds: 5
+              serviceAccountName: openvpn-operator
+              serviceAccount: openvpn-operator
+  customresourcedefinitions:
+    owned:
+      - description: An HA openvpn deployment backed by ldap
+        displayName: Openvpn
+        kind: Openvpn
+        name: openvpn.brain.cloudflinger.com
+        version: v1alpha1
+        resources:
+          - kind: Deployment
+            version: v1beta2
+          - kind: ReplicaSet
+            version: v1beta2
+          - kind: Pod
+            version: v1
+        specDescriptors:
+          - description: The desired number of member Pods for the deployment.
+            displayName: Size
+            path: size
+            x-descriptors:
+              - 'urn:alm:descriptor:com.tectonic.ui:podCount'
+        statusDescriptors:
+          - description: The current status of the application.
+            displayName: Status
+            path: phase
+            x-descriptors:
+              - 'urn:alm:descriptor:io.kubernetes.phase'
+          - description: Explanation for the current status of the application.
+            displayName: Status Details
+            path: reason
+            x-descriptors:
+              - 'urn:alm:descriptor:io.kubernetes.phase:reason'

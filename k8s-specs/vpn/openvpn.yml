@@ -1,0 +1,80 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example-vpn-bind-creds
+type: Opaque
+data:
+  bind-dn: Y249dnBuLGRjPWNsb3VkZmxpbmdlcixkYz1jb20=
+  bind-pw: VXhMT01NZkdTOTZuNlRMWA==
+---
+apiVersion: brain.cloudflinger.com/v1alpha1
+kind: Openvpn
+metadata:
+  name: foxpass-vpn
+  labels:
+    app: openvpn
+spec:
+  # Values for openvpn.
+  replicaCount: 1
+  updateStrategy: {}
+  exporter:
+    enabled: true
+    image:
+      repository: cloudflinger/openvpn-exporter
+      tag: 1.0.0
+      pullPolicy: IfNotPresent
+  image:
+    repository: cloudflinger/openvpn-ldap
+    tag: 1.0.0
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    externalPort: 443
+    internalPort: 443
+    LoadBalancerSourceRanges: 0.0.0.0/0
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: vpn.cloudflinger.com.
+  resources:
+    limits:
+      cpu: 300m
+      memory: 128Mi
+    requests:
+      cpu: 300m
+      memory: 128Mi
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    accessMode: ReadWriteOnce
+    size: 2M
+  openvpn:
+    certsSecretName: vpn-cloudflinger-com-tls
+    ldap:
+      bindCredsSecretName: example-vpn-bind-creds
+      enabled: true
+      url: "ldaps://ldap.foxpass.com"
+      baseDN: "DC=cloudflinger,DC=com"
+      searchFilter: "(&(uid=%u))"
+    # Network allocated for openvpn clients
+    OVPN_NETWORK: 10.2.1.0
+    # Network subnet allocated for openvpn client
+    OVPN_SUBNET: 255.255.255.0
+    # Protocol used by openvpn
+    OVPN_PROTO: tcp
+    OVPN_DNS_NAME: "vpn.cloudflinger.com"
+    # Kubernetes pod network
+    OVPN_K8S_POD_NETWORK: "172.16.0.0"
+    OVPN_K8S_POD_SUBNET: "255.240.0.0"
+    # Kubernetes service network
+    OVPN_K8S_CLUSTER_IP_NETWORK: "192.168.0.0"
+    OVPN_K8S_CLUSTER_IP_SUBNET: "255.255.0.0"
+    # Kubernetes node ip network
+    OVPN_K8S_NODE_NETWORK: "10.1.0.0"
+    OVPN_K8S_NODE_SUBNET: "255.255.0.0"
+    # TODO: idk if we want this or not
+    dhcpOptionDomain: false
+    redirectGateway: false
+    # Arbitrary lines appended to the end of the server configuration file
+    # conf: |
+    #  max-clients 100
+    #  client-to-client
