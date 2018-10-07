@@ -35,7 +35,9 @@ Once you have this keypair you must set these env vars:
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
 
-If your credentials are stored in your `~/.aws` folder, you will need to identify which creds you need an set these env vars with the right values.
+If your credentials are stored in your `~/.aws` folder, you can use the provided helper script to set the env vars.  You may still need to set AWS_DEFAULT_REGION if it is not specified in your config file.
+
+``` source aws_exporter.sh MY_PROFILE_NAME ```
 
 `AWS_PROFILE` is not supported.
 
