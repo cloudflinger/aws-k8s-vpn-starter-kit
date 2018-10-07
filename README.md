@@ -21,17 +21,21 @@ Once you have your account, follow these docs to [Set Up a VPN](https://foxpass.
 
 ## Docker environment
 
-Note the `docker_env.list.example` file.  Copy it to `docker_env.list`.
+Note the  `docker_env.list` file.
 
-Modifications to `docker_env.list` will be picked up by terraform and kubectl.
+Environment variables set here are available in the docker.
 
 ## AWS environment
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
 
-Add these values to `docker_env.list`
+Once you have this keypair you must set these env vars:
 
-If you aren't sure where to get find this, follow these docs:
+-   AWS_ACCESS_KEY_ID
+-   AWS_SECRET_ACCESS_KEY
+-   AWS_DEFAULT_REGION
+
+If you aren't sure what to do here, follow these docs:
 
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
