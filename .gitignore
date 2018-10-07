@@ -10,6 +10,7 @@
 
 plan
 plan.out
+tfplan
 
 kubeconfig*
 

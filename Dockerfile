@@ -34,6 +34,6 @@ RUN wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_V
 	mv terraform /usr/bin/ && rm terraform_${TF_VERSION}_linux_amd64.zip
 
 # put start script in /root
-COPY deploy.sh /root/
+COPY scripts/deploy.sh /root/
 
 CMD ["/bin/bash"]
