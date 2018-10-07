@@ -74,11 +74,8 @@ AWS_REGION=us-west-2
 
 ## Build the docker
 
-``` docker_build.sh ```
+``` make docker-build-kit ```
 
-## Run the docker
+## Plan the infrastructure
 
-``` docker_run.sh ```
-
-This will run `deploy.sh` inside the docker, executing both the terraform and kubectl commands for you.
-
+``` make terraform-plan ```
