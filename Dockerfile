@@ -16,6 +16,11 @@ RUN apt-get update && \
 # install AWS CLI
 RUN pip install awscli
 
+# download aws-iam-authenticator for kubernetes access via iam rol
+RUN curl -o /usr/bin/aws-iam-authenticator \
+	https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator \
+	&& chmod u+x /usr/bin/aws-iam-authenticator
+
 # everything should be installed under the root user's home directory
 WORKDIR /root
 
