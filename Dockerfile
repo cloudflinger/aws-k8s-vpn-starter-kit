@@ -31,6 +31,9 @@ RUN wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_V
     unzip terraform_${TF_VERSION}_linux_amd64.zip && chmod u+x terraform && \
 	mv terraform ~/.local/bin/ && rm terraform_${TF_VERSION}_linux_amd64.zip
 
+# put start script in /root
+COPY run.sh /root/
+
 # include local bin directory in path
 RUN echo "export PATH=\"\$HOME/.local/bin:\$PATH\"">> .bashrc
 

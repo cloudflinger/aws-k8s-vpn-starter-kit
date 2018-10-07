@@ -13,6 +13,10 @@ This repository contains
 -   k8s spec files to install an OpenVPN operator with LDAP support
 -   k8s spec files to configure OpenVPN in your k8s cluster
 
+## Pre-requisites
+
+You must [install Docker](https://docs.docker.com/install/) to use the AWS k8s vpn starter kit.
+
 ## Setup your LDAP provider
 
 If you do not already have LDAP, we recommend you get started with Foxpass.
@@ -29,19 +33,21 @@ Environment variables set here are available in the docker.
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
 
-Once you have this keypair you must set these env vars:
+Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html) to get started:
 
 -   AWS_ACCESS_KEY_ID
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
 
-If your credentials are stored in your `~/.aws` folder, you can use the provided helper script to set the env vars.  You must set `region` in your credentials file so it gets set properly.
+`AWS_PROFILE` is not supported, however, you can still use your profiles stored in your `~/.aws` folder by running the helper script.
 
-``` source aws_exporter.sh MY_PROFILE_NAME ```
+-   You must set `region` in your profile
+-   Run the script using the `source` command
+    -   ``` source aws_exporter.sh MY_PROFILE_NAME ```
 
-`AWS_PROFILE` is not supported.
 
-If you still aren't sure what to do here, follow these docs:
+
+If none of this is making sense, read these docs:
 
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
