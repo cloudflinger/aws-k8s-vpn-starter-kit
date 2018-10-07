@@ -33,11 +33,15 @@ Environment variables set here are available in the docker.
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
 
+### Option 1 - set the env vars in your shell
+
 Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html) to get started:
 
 -   AWS_ACCESS_KEY_ID
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
+
+### Option 2 - use an aws profile
 
 `AWS_PROFILE` is not supported, however, you can still use your profiles stored in your `~/.aws` folder by running the helper script.
 
@@ -45,9 +49,13 @@ Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-
 -   Run the script using the `source` command
     -   ``` source aws_exporter.sh MY_PROFILE_NAME ```
 
+### Option 3 - use docker_env.list
 
+You can add the AWS env vars and their values to `docker_env.list` if you prefer.  We do not recommend this, because you will end up committing these secrets to your repository, and it is not likely what you want.
 
-If none of this is making sense, read these docs:
+### Docs on IAM users and access keys
+
+If none of this is making sense, try reading these docs:
 
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
@@ -76,7 +84,7 @@ AWS_REGION=us-west-2
 
 After you run this script, your shell will be attached to the docker.
 
-## Infrastructure provisioning (inside docker)
+## Deploy OpenVPN (inside docker)
 
 One script will run both the terraform and kubectl commands for you.
 
