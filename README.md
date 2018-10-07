@@ -35,7 +35,11 @@ Once you have this keypair you must set these env vars:
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
 
-If you aren't sure what to do here, follow these docs:
+If your credentials are stored in your `~/.aws` folder, you will need to identify which creds you need an set these env vars with the right values.
+
+`AWS_PROFILE` is not supported.
+
+If you still aren't sure what to do here, follow these docs:
 
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
