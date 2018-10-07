@@ -49,6 +49,15 @@ terraform-destroy(){
 run_docker /terraform "terraform destroy"
 }
 
+kubectl-apply(){
+  SPEC_CMD="kubectl -f 00_storage_class.yaml; \
+for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done \
+kubectl -f 02_vpn_operator.yaml \
+kubectl -f 03_vpn_cr.yaml
+"
+  run_docker /k8s-specs $SPEC_CMD
+}
+
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
   echo "Example Usage:"

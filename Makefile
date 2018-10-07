@@ -17,3 +17,6 @@ terraform-apply:
 
 terraform-destroy:
 	./scripts/kit.sh terraform-destroy
+
+kubectl-apply:
+	./scripts/kit.sh kubectl-apply
