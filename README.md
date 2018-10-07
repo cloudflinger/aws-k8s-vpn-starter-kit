@@ -19,18 +19,34 @@ If you do not already have LDAP, we recommend you get started with Foxpass.
 
 Once you have your account, follow these docs to [Set Up a VPN](https://foxpass.readme.io/docs/set-up-a-vpn)
 
+## Docker environment
+
+Note the `docker_env.list.example` file.  Copy it to `docker_env.list`.
+
+Modifications to `docker_env.list` will be picked up by terraform and kubectl.
+
 ## AWS environment
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
+
+Add these values to `docker_env.list`
 
 If you aren't sure where to get find this, follow these docs:
 
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
 
+## Build the docker
+
+``` docker_build.sh ```
+
+## Run the docker
+
+``` docker_run.sh ```
+
 ## Infrastructure configuration
 
-Modify values in `terraform/config.tf`
+Modify values in `/terraform/config.tf`
 
 ```
 ...
@@ -42,17 +58,9 @@ cluster_name     = "test-eks-cluster"
 ...
 ```
 
-## Infrastructure provisioning
+## Infrastructure provisioning (inside docker)
 
-Before you can run Terraform, configure environment variables:
-
-```
-export AWS_ACCESS_KEY_ID="AKIAJ......."
-export AWS_SECRET_ACCESS_KEY="po7sOhAn..............."
-export AWS_DEFAULT_REGION="us-west-2"
-```
-
-Next, from within the `terraform` folder, `init` and then `apply`.
+Next, from within the `/terraform` folder, `init` and then `apply`.
 
 ```
 terraform init

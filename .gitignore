@@ -14,3 +14,6 @@ plan.out
 kubeconfig*
 
 config-map-aws-auth_test-eks-cluster.yaml
+
+# secret files
+docker_env.list
