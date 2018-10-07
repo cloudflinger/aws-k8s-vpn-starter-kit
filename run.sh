@@ -22,3 +22,9 @@ export TF_VAR_aws_region=${AWS_REGION}
 cd /terraform
 terraform init
 terraform plan
+
+#cd /k8s-specs
+#kubectl -f 00_storage_class.yaml
+#for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done
+#kubectl -f 02_vpn_operator.yaml
+#kubectl -f 03_vpn_cr.yaml

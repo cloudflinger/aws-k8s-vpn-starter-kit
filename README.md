@@ -60,36 +60,24 @@ If none of this is making sense, read these docs:
 
 ``` docker_run.sh ```
 
-## Infrastructure configuration
+## Configuration
 
-Modify values in `/terraform/config.tf`
+Modify values in `docker_env.list`
 
 ```
 ...
-environment_name = "prod" # used for resource tagging
-vpc_cidr         = "10.1.0.0/16"
-vpc_name         = "my-vpc"
-aws_region       = "us-west-2"
-cluster_name     = "test-eks-cluster"
+CLUSTER_NAME=test-eks-cluster
+ENVIRONMENT_NAME=prod
+VPC_CIDR=10.1.0.0/16
+VPC_NAME=my-vpc
+AWS_REGION=us-west-2
 ...
 ```
 
 ## Infrastructure provisioning (inside docker)
 
-From within the `/terraform` folder, `init` and then `apply`.
+One script will run both the terraform and kubectl commands for you.
 
 ```
-terraform init
-terraform apply
-```
-
-## OpenVPN install (inside docker)
-
-From within the `/k8s-specs` folder:
-
-```
-kubectl -f 00_storage_class.yaml
-for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done
-kubectl -f 02_vpn_operator.yaml
-kubectl -f 03_vpn_cr.yaml
+/root/run.sh
 ```
