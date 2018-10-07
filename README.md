@@ -27,11 +27,11 @@ Once you have your account, follow these docs to [Set Up a VPN](https://foxpass.
 
 Note the  `docker_env.list` file.
 
-Environment variables set here are available in the docker.
+Environment variables set here are available in the docker container.
 
 ## AWS environment
 
-An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
+An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed. It must be made available inside the docker container.
 
 ### Option 1 - set the env vars in your shell
 

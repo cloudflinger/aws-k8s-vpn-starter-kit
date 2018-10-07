@@ -23,7 +23,7 @@ WORKDIR /root
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl /usr/bin
 
 # download terraform
-ENV TF_VERSION 0.11.2
+ENV TF_VERSION 0.11.8
 RUN wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip && \
     unzip terraform_${TF_VERSION}_linux_amd64.zip && chmod u+x terraform && \
 	mv terraform /usr/bin/ && rm terraform_${TF_VERSION}_linux_amd64.zip
