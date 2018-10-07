@@ -19,22 +19,16 @@ RUN pip install awscli
 # everything should be installed under the root user's home directory
 WORKDIR /root
 
-# set up local bin directory
-RUN mkdir -p ~/.local/bin
-
 # download kubectl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl ~/.local/bin
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl /usr/bin
 
 # download terraform
 ENV TF_VERSION 0.11.2
 RUN wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip && \
     unzip terraform_${TF_VERSION}_linux_amd64.zip && chmod u+x terraform && \
-	mv terraform ~/.local/bin/ && rm terraform_${TF_VERSION}_linux_amd64.zip
+	mv terraform /usr/bin/ && rm terraform_${TF_VERSION}_linux_amd64.zip
 
 # put start script in /root
-COPY run.sh /root/
-
-# include local bin directory in path
-RUN echo "export PATH=\"\$HOME/.local/bin:\$PATH\"">> .bashrc
+COPY deploy.sh /root/
 
 CMD ["/bin/bash"]

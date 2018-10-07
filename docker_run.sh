@@ -10,4 +10,4 @@ docker run --rm \
 --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
--it aws-k8s-vpn-starter-kit:v1
+-it aws-k8s-vpn-starter-kit:v1 /root/deploy.sh
