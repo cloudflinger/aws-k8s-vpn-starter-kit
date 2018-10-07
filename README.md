@@ -52,14 +52,6 @@ If none of this is making sense, read these docs:
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
 
-## Build the docker
-
-``` docker_build.sh ```
-
-## Run the docker
-
-``` docker_run.sh ```
-
 ## Configuration
 
 Modify values in `docker_env.list`
@@ -73,6 +65,16 @@ VPC_NAME=my-vpc
 AWS_REGION=us-west-2
 ...
 ```
+
+## Build the docker
+
+``` docker_build.sh ```
+
+## Run the docker
+
+``` docker_run.sh ```
+
+After you run this script, your shell will be attached to the docker.
 
 ## Infrastructure provisioning (inside docker)
 
