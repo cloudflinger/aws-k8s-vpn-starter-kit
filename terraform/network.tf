@@ -1,21 +1,21 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "${local.vpc_name}"
-  cidr = "${local.vpc_cidr}"
+  name = "${var.vpc_name}"
+  cidr = "${var.vpc_cidr}"
 
   azs = "${local.azs}"
 
   private_subnets = [
-    "${cidrsubnet(local.vpc_cidr, 5, 0)}",
-    "${cidrsubnet(local.vpc_cidr, 5, 1)}",
-    "${cidrsubnet(local.vpc_cidr, 5, 2)}",
+    "${cidrsubnet(var.vpc_cidr, 5, 0)}",
+    "${cidrsubnet(var.vpc_cidr, 5, 1)}",
+    "${cidrsubnet(var.vpc_cidr, 5, 2)}",
   ]
 
   public_subnets = [
-    "${cidrsubnet(local.vpc_cidr, 5, 3)}",
-    "${cidrsubnet(local.vpc_cidr, 5, 4)}",
-    "${cidrsubnet(local.vpc_cidr, 5, 5)}",
+    "${cidrsubnet(var.vpc_cidr, 5, 3)}",
+    "${cidrsubnet(var.vpc_cidr, 5, 4)}",
+    "${cidrsubnet(var.vpc_cidr, 5, 5)}",
   ]
 
   enable_nat_gateway = true
@@ -23,7 +23,7 @@ module "vpc" {
 
   tags = {
     Terraform   = "true"
-    Environment = "${local.environment_name}"
+    Environment = "${var.environment_name}"
   }
 
   private_subnet_tags = {
