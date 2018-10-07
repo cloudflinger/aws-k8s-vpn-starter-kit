@@ -5,6 +5,10 @@ set -e
 
 . scripts/env.sh
 
+if [ ! -z "${AWS_PROFILE}" ]; then
+	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
+fi
+
 ###########################
 #
 # This script is designed to
@@ -50,12 +54,11 @@ run_docker /terraform "terraform destroy"
 }
 
 kubectl-apply(){
-  SPEC_CMD="kubectl -f 00_storage_class.yaml; \
-for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done \
-kubectl -f 02_vpn_operator.yaml \
-kubectl -f 03_vpn_cr.yaml
-"
-  run_docker /k8s-specs $SPEC_CMD
+  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 00_storage_class.yaml" && true
+  # run_docker /k8s-specs "for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done"
+  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 01_olm-0.7.0/"
+  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 02_vpn_operator.yaml"
+  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 03_vpn_cr.yaml"
 }
 
 if [ -z ${1+x} ]; then
