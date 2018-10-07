@@ -11,3 +11,9 @@ docker-build-kit:
 
 terraform-plan:
 	./scripts/kit.sh terraform-plan
+
+terraform-apply:
+	./scripts/kit.sh terraform-apply
+
+terraform-destroy:
+	./scripts/kit.sh terraform-destroy

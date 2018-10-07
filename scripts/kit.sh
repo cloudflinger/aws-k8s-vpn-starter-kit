@@ -41,8 +41,16 @@ terraform-plan(){
 run_docker /terraform "terraform plan -out plan"
 }
 
-if [ -z ${1+x} ]; then 
-  echo "ERROR: You must pass a command"; 
+terraform-apply(){
+run_docker /terraform "terraform apply plan; rm plan"
+}
+
+terraform-destroy(){
+run_docker /terraform "terraform destroy"
+}
+
+if [ -z ${1+x} ]; then
+  echo "ERROR: You must pass a command";
   echo "Example Usage:"
   echo "kit.sh terraform_plan"
   exit 1;
