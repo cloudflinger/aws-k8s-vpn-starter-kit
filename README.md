@@ -17,22 +17,39 @@ This repository contains
 
 If you do not already have LDAP, we recommend you get started with Foxpass.
 
-## Setup your AWS environment
+## AWS environment
 
-You need an aws key pair with IAM permissions to create a VPC and EKS cluster.
+An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
+
+If you aren't sure where to get this, read the documentation on [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html) and [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
+
+## Infrastructure configuration
+
+Modify values in `terraform/config.tf`
+
+```
+...
+environment_name = "prod" # used for resource tagging
+vpc_cidr         = "10.1.0.0/16"
+vpc_name         = "my-vpc"
+aws_region       = "us-west-2"
+cluster_name     = "test-eks-cluster"
+...
+```
+
+## Infrastructure provisioning
 
 Before you can run Terraform, configure environment variables:
 
 ```
-#!/bin/bash
 export AWS_ACCESS_KEY_ID="AKIAJ......."
 export AWS_SECRET_ACCESS_KEY="po7sOhAn..............."
 export AWS_DEFAULT_REGION="us-west-2"
 ```
 
-## Create the infrastructure
+Next, from within the `terraform` folder, `init` and then `apply`.
 
 ```
-aws-k8s-vpn-starter-kit/terraform$ terraform init
-aws-k8s-vpn-starter-kit/terraform$ terraform apply
+terraform init
+terraform apply
 ```
