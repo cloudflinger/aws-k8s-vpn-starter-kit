@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t eks-starter-kit:v1 .
+docker build -t aws-k8s-vpn-starter-kit:v1 .
