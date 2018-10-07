@@ -82,12 +82,5 @@ AWS_REGION=us-west-2
 
 ``` docker_run.sh ```
 
-After you run this script, your shell will be attached to the docker.
+This will run `deploy.sh` inside the docker, executing both the terraform and kubectl commands for you.
 
-## Deploy OpenVPN (inside docker)
-
-One script will run both the terraform and kubectl commands for you.
-
-```
-/root/run.sh
-```
