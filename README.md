@@ -64,9 +64,20 @@ cluster_name     = "test-eks-cluster"
 
 ## Infrastructure provisioning (inside docker)
 
-Next, from within the `/terraform` folder, `init` and then `apply`.
+From within the `/terraform` folder, `init` and then `apply`.
 
 ```
 terraform init
 terraform apply
+```
+
+## OpenVPN install (inside docker)
+
+From within the `/k8s-specs` folder:
+
+```
+kubectl -f 00_storage_class.yaml
+for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done
+kubectl -f 02_vpn_operator.yaml
+kubectl -f 03_vpn_cr.yaml
 ```
