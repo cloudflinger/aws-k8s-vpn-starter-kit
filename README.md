@@ -65,13 +65,11 @@ If none of this is making sense, try reading these docs:
 Modify values in `docker_env.list`
 
 ```
-...
 CLUSTER_NAME=test-eks-cluster
 ENVIRONMENT_NAME=prod
 VPC_CIDR=10.1.0.0/16
 VPC_NAME=my-vpc
 AWS_REGION=us-west-2
-...
 ```
 
 ## Build the docker
