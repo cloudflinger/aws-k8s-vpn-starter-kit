@@ -17,11 +17,16 @@ This repository contains
 
 If you do not already have LDAP, we recommend you get started with Foxpass.
 
+Once you have your account, follow these docs to [Set Up a VPN](https://foxpass.readme.io/docs/set-up-a-vpn)
+
 ## AWS environment
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed.
 
-If you aren't sure where to get this, read the documentation on [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html) and [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
+If you aren't sure where to get find this, follow these docs:
+
+-   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
+-   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
 
 ## Infrastructure configuration
 
