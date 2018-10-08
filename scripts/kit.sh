@@ -40,7 +40,7 @@ run_docker /terraform "terraform init"
 }
 
 terraform-plan(){
-run_docker /terraform "terraform plan -out plan"
+run_docker /terraform terraform plan -out plan
 }
 
 terraform-apply(){
