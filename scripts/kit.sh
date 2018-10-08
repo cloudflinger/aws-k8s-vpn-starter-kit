@@ -52,6 +52,10 @@ terraform-destroy(){
 run_docker /terraform "terraform destroy"
 }
 
+kubectl(){
+run_docker /k8s-specs kubectl --kubeconfig kubeconfig_${CLUSTER_NAME} ${@}
+}
+
 kubectl-apply(){
   run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 00_storage_class.yaml" && true
   # run_docker /k8s-specs "for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done"
@@ -60,10 +64,16 @@ kubectl-apply(){
   run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 03_vpn_cr.yaml"
 }
 
+main(){
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
   echo "Example Usage:"
   echo "kit.sh terraform-plan"
   exit 1;
 fi
-$1
+
+# pass in all subsequent arguments to the function named by the first argument
+$1 ${@:2}
+}
+
+main $@

@@ -23,3 +23,6 @@ terraform-destroy:
 
 kubectl-apply:
 	./scripts/kit.sh kubectl-apply
+
+vpn-init:
+	./scripts/kit.sh kubectl apply -f 00_*
