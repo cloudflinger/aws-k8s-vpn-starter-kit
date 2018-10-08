@@ -35,17 +35,17 @@ Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
 
-### Option 2 - use an aws profile
+### Option 2 - use an AWS profile
 
-`AWS_PROFILE` is not supported, however, you can still use your profiles stored in your `~/.aws` folder by running the helper script.
+`AWS_PROFILE` is supported, with one condition:
 
 -   You must set `region` in your profile
--   Run the script using the `source` command
-    -   ``` source aws_exporter.sh MY_PROFILE_NAME ```
 
-### Option 3 - use docker_env.list
+Example
 
-You can add the AWS env vars and their values to `docker_env.list` if you prefer.  We do not recommend this, because you will end up committing these secrets to your repository, and it is not likely what you want.
+```
+AWS_PROFILE=cloudflinger make terraform-plan
+```
 
 ### Docs on IAM users and access keys
 
