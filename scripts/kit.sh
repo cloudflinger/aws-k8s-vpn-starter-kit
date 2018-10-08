@@ -9,13 +9,6 @@ if [ ! -z "${AWS_PROFILE}" ]; then
 	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
 fi
 
-###########################
-#
-# This script is designed to
-# be run inside the docker
-#
-##########################
-
 : ${CLUSTER_NAME:?"Need to set CLUSTER_NAME env var"}
 : ${ENVIRONMENT_NAME:?"Need to set ENVIRONMENT_NAME env var"}
 : ${VPC_CIDR:?"Need to set VPC_CIDR env var"}
@@ -64,7 +57,7 @@ kubectl-apply(){
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
   echo "Example Usage:"
-  echo "kit.sh terraform_plan"
+  echo "kit.sh terraform-plan"
   exit 1;
 fi
 $1
