@@ -34,6 +34,10 @@ docker run --rm \
 -it aws-k8s-vpn-starter-kit:v1 $2
 }
 
+terraform-init(){
+run_docker /terraform "terraform init"
+}
+
 terraform-plan(){
 run_docker /terraform "terraform plan -out plan"
 }
