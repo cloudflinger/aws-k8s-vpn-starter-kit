@@ -44,7 +44,8 @@ run_docker /terraform "terraform plan -out plan"
 }
 
 terraform-apply(){
-run_docker /terraform "terraform apply plan; rm plan"
+run_docker /terraform "terraform apply plan"
+run_docker /terraform "rm plan"
 }
 
 terraform-destroy(){
