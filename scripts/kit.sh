@@ -35,33 +35,36 @@ aws-k8s-vpn-starter-kit:v1 \
 ${@:2}
 }
 
+run_terraform(){
+run_docker /terraform terraform ${@}
+}
+
 terraform-init(){
-run_docker /terraform "terraform init"
+run_terraform init
 }
 
 terraform-plan(){
-run_docker /terraform terraform plan -out plan
+run_terraform plan -out plan
 }
 
 terraform-apply(){
-run_docker /terraform "terraform apply plan"
+run_terraform apply plan
 run_docker /terraform "rm plan"
 }
 
 terraform-destroy(){
-run_docker /terraform "terraform destroy"
+run_terraform destroy
 }
 
-kubectl(){
-run_docker /k8s-specs kubectl --kubeconfig kubeconfig_${CLUSTER_NAME} ${@}
+run_kubectl(){
+run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} ${@}
 }
 
 kubectl-apply(){
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 00_storage_class.yaml" && true
-  # run_docker /k8s-specs "for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done"
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 01_olm-0.7.0/"
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 02_vpn_operator.yaml"
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 03_vpn_cr.yaml"
+  run_kubectl create -f 00_storage_class.yaml || true
+  run_kubectl create -f 01_olm-0.7.0/
+  run_kubectl create -f 02_vpn_operator.yaml
+  run_kubectl create -f 03_vpn_cr.yaml
 }
 
 main(){

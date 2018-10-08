@@ -25,4 +25,4 @@ kubectl-apply:
 	./scripts/kit.sh kubectl-apply
 
 vpn-init:
-	./scripts/kit.sh kubectl apply -f 00_*
+	./scripts/kit.sh run_kubectl apply -f 00_storage_class.yaml
