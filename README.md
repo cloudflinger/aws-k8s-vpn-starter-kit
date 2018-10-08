@@ -23,12 +23,6 @@ If you do not already have LDAP, we recommend you get started with Foxpass.
 
 Once you have your account, follow these docs to [Set Up a VPN](https://foxpass.readme.io/docs/set-up-a-vpn)
 
-## Docker environment
-
-Note the  `docker_env.list` file.
-
-Environment variables set here are available in the docker container.
-
 ## AWS environment
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed. It must be made available inside the docker container.
@@ -62,14 +56,15 @@ If none of this is making sense, try reading these docs:
 
 ## Configuration
 
-Modify values in `docker_env.list`
+Modify values in `scripts/env.sh`
 
 ```
-CLUSTER_NAME=test-eks-cluster
-ENVIRONMENT_NAME=prod
-VPC_CIDR=10.1.0.0/16
-VPC_NAME=my-vpc
-AWS_REGION=us-west-2
+#!/bin/bash
+export CLUSTER_NAME=test-eks-cluster
+export ENVIRONMENT_NAME=prod
+export VPC_CIDR=10.1.0.0/16
+export VPC_NAME=my-vpc
+export AWS_REGION=us-west-2
 ```
 
 ## Build the docker
