@@ -61,10 +61,10 @@ run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME}
 }
 
 kubectl-apply(){
-  run_kubectl create -f 00_storage_class.yaml || true
-  run_kubectl create -f 01_olm-0.7.0/
-  run_kubectl create -f 02_vpn_operator.yaml
-  run_kubectl create -f 03_vpn_cr.yaml
+run_kubectl create -f 00_storage_class.yaml || true
+run_kubectl create -f 01_olm-0.7.0/
+run_kubectl create -f 02_vpn_operator.yaml
+run_kubectl create -f 03_vpn_cr.yaml
 }
 
 main(){
