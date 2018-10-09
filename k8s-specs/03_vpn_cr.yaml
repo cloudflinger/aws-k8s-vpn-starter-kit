@@ -34,7 +34,7 @@ spec:
     internalPort: 443
     LoadBalancerSourceRanges: 0.0.0.0/0
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: vpn.cloudflinger.com.
+      external-dns.alpha.kubernetes.io/hostname: vpn.example.com.
   resources:
     limits:
       cpu: 300m
@@ -48,12 +48,11 @@ spec:
     accessMode: ReadWriteOnce
     size: 2M
   openvpn:
-    certsSecretName: vpn-cloudflinger-com-tls
     ldap:
       bindCredsSecretName: example-vpn-bind-creds
       enabled: true
       url: "ldaps://ldap.foxpass.com"
-      baseDN: "DC=cloudflinger,DC=com"
+      baseDN: "DC=example,DC=com"
       searchFilter: "(&(uid=%u))"
     # Network allocated for openvpn clients
     OVPN_NETWORK: 10.2.1.0
@@ -61,7 +60,7 @@ spec:
     OVPN_SUBNET: 255.255.255.0
     # Protocol used by openvpn
     OVPN_PROTO: tcp
-    OVPN_DNS_NAME: "vpn.cloudflinger.com"
+    OVPN_DNS_NAME: "vpn.example.com"
     # Kubernetes pod network
     OVPN_K8S_POD_NETWORK: "172.16.0.0"
     OVPN_K8S_POD_SUBNET: "255.240.0.0"
