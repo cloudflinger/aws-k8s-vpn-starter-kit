@@ -14,8 +14,8 @@ spec:
   scope: Namespaced
   version: v1alpha1
 ---
-apiVersion: operators.coreos.com/v1alpha1
-kind: ClusterServiceVersion
+apiVersion: app.coreos.com/v1alpha1
+kind: ClusterServiceVersion-v1
 metadata:
   name: openvpn-operator.v0.0.1
 spec:
