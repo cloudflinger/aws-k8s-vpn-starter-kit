@@ -30,6 +30,10 @@ module "vpc" {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+  }
+
   vpc_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
