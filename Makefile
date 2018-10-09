@@ -25,7 +25,4 @@ kubectl-apply:
 	./scripts/kit.sh kubectl-apply
 
 vpn-init:
-	./scripts/kit.sh run_kubectl create -f 00_storage_class.yaml
-	./scripts/kit.sh run_kubectl create -f 01_olm-0.5.0/
-	./scripts/kit.sh run_kubectl create -f 02_vpn_operator.yaml
-	./scripts/kit.sh run_kubectl create -f 03_vpn_cr.yaml
+	./scripts/kit.sh kubectl-apply
