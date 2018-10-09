@@ -9,6 +9,10 @@ module "eks" {
   }
 
   vpc_id = "${module.vpc.vpc_id}"
+  write_kubeconfig = false
+}
 
-  kubeconfig_name = "${var.cluster_name}"
+resource "local_file" "kubeconfig" {
+  content  = "${module.eks.kubeconfig}"
+  filename = "./kubeconfig_${var.cluster_name}"
 }
