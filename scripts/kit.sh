@@ -31,6 +31,7 @@ docker run --rm \
 --env TF_VAR_vpc_name=${VPC_NAME} \
 --env TF_VAR_aws_region=${AWS_DEFAULT_REGION} \
 --workdir $1 \
+-it \
 aws-k8s-vpn-starter-kit:v1 \
 ${@:2}
 }
