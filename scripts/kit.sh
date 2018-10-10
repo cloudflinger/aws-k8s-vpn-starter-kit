@@ -67,13 +67,14 @@ sed-set(){
   TARGET=$1
   VALUE=${!TARGET}
   FILE=$2
-  sed "s/${TARGET}:.*/${TARGET}: \"${VALUE}\"/g" $FILE
+  QUOTE=$3
+  sed "s/${TARGET}:.*/${TARGET}: ${QUOTE}${VALUE}${QUOTE}/g" $FILE
 }
 
 kubectl-echo(){
   # THESE SED COMMANDS ARE MISSING THE -i
   # SO THEY JUST ECHO AND DO NOT YET REPLACE
-  sed-set OVPN_K8S_POD_NETWORK k8s-specs/03_vpn_cr.yaml
+  sed-set OVPN_K8S_POD_NETWORK k8s-specs/03_vpn_cr.yaml \"
 }
 
 main(){
