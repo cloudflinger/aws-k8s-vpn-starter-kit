@@ -9,11 +9,6 @@ if [ ! -z "${AWS_PROFILE}" ]; then
 	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
 fi
 
-: ${CLUSTER_NAME:?"Need to set CLUSTER_NAME env var"}
-: ${ENVIRONMENT_NAME:?"Need to set ENVIRONMENT_NAME env var"}
-: ${VPC_CIDR:?"Need to set VPC_CIDR env var"}
-: ${VPC_NAME:?"Need to set VPC_NAME env var"}
-
 : ${AWS_ACCESS_KEY_ID:?"Need to set AWS_ACCESS_KEY_ID env var"}
 : ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
 : ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
@@ -68,10 +63,17 @@ run_kubectl create -f 02_vpn_operator.yaml || true
 run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
+sed-set(){
+  TARGET=$1
+  VALUE=${!TARGET}
+  FILE=$2
+  sed "s/${TARGET}:.*/${TARGET}: \"${VALUE}\"/g" $FILE
+}
+
 kubectl-echo(){
   # THESE SED COMMANDS ARE MISSING THE -i
   # SO THEY JUST ECHO AND DO NOT YET REPLACE
-  sed "s/OVPN_K8S_POD_NETWORK:.*/OVPN_K8S_POD_NETWORK: \"${OVPN_K8S_POD_NETWORK}\"/g" k8s-specs/03_vpn_cr.yaml
+  sed-set OVPN_K8S_POD_NETWORK k8s-specs/03_vpn_cr.yaml
 }
 
 main(){
