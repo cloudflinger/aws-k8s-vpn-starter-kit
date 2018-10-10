@@ -20,3 +20,6 @@ terraform-destroy:
 
 kubectl-apply:
 	./scripts/kit.sh kubectl-apply
+
+kubectl-echo:
+	./scripts/kit.sh kubectl-echo
