@@ -27,10 +27,14 @@ module "vpc" {
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+  }
+
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 
   vpc_tags = {
-    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 }

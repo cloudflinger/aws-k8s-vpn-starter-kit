@@ -9,6 +9,9 @@ docker-build-kit:
 	@echo "Building the docker tool kit"
 	docker build -t $(kit_image_name) .
 
+terraform-init:
+	./scripts/kit.sh terraform-init
+
 terraform-plan:
 	./scripts/kit.sh terraform-plan
 
@@ -19,6 +22,9 @@ terraform-destroy:
 	./scripts/kit.sh terraform-destroy
 
 kubectl-apply:
+	./scripts/kit.sh kubectl-apply
+
+vpn-init:
 	./scripts/kit.sh kubectl-apply
 
 kubectl-echo:

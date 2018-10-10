@@ -31,39 +31,62 @@ docker run --rm \
 --env TF_VAR_vpc_name=${VPC_NAME} \
 --env TF_VAR_aws_region=${AWS_DEFAULT_REGION} \
 --workdir $1 \
--it aws-k8s-vpn-starter-kit:v1 $2
+-it \
+aws-k8s-vpn-starter-kit:v1 \
+${@:2}
+}
+
+run_terraform(){
+run_docker /terraform terraform ${@}
+}
+
+terraform-init(){
+run_terraform init
 }
 
 terraform-plan(){
-run_docker /terraform "terraform plan -out plan"
+run_terraform plan -out plan
 }
 
 terraform-apply(){
-run_docker /terraform "terraform apply plan; rm plan"
+run_terraform apply plan
+run_docker /terraform "rm plan"
 }
 
 terraform-destroy(){
-run_docker /terraform "terraform destroy"
+run_terraform destroy
+}
+
+run_kubectl(){
+run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} ${@}
 }
 
 kubectl-apply(){
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 00_storage_class.yaml" && true
-  # run_docker /k8s-specs "for SPEC in $(ls -1 01_olm*);do kubectl -f $SPEC;done"
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 01_olm-0.7.0/"
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 02_vpn_operator.yaml"
-  run_docker /k8s-specs "kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} create -f 03_vpn_cr.yaml"
+run_kubectl create -f 00_storage_class.yaml || true
+run_kubectl create -f 01_olm-0.5.0/ || true
+run_kubectl create -f 02_vpn_operator.yaml || true
+run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
+<<<<<<< HEAD
 kubectl-echo(){
   # THESE SED COMMANDS ARE MISSING THE -i
   # SO THEY JUST ECHO AND DO NOT YET REPLACE
   sed "s/OVPN_K8S_POD_NETWORK:.*/OVPN_K8S_POD_NETWORK: \"${OVPN_K8S_POD_NETWORK}\"/g" k8s-specs/03_vpn_cr.yaml
 }
 
+=======
+main(){
+>>>>>>> bfa724daeff4115460f0ccee96b0db584e484735
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
   echo "Example Usage:"
   echo "kit.sh terraform-plan"
   exit 1;
 fi
-$1
+
+# pass in all subsequent arguments to the function named by the first argument
+$1 ${@:2}
+}
+
+main $@
