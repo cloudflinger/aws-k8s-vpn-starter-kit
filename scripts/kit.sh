@@ -75,6 +75,7 @@ kubectl-echo(){
   # THESE SED COMMANDS ARE MISSING THE -i
   # SO THEY JUST ECHO AND DO NOT YET REPLACE
   sed-set OVPN_K8S_POD_NETWORK k8s-specs/03_vpn_cr.yaml \"
+  sed-set OVPN_K8S_POD_SUBNET k8s-specs/03_vpn_cr.yaml \"
 }
 
 main(){
