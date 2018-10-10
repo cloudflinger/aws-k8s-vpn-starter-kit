@@ -68,16 +68,13 @@ run_kubectl create -f 02_vpn_operator.yaml || true
 run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
-<<<<<<< HEAD
 kubectl-echo(){
   # THESE SED COMMANDS ARE MISSING THE -i
   # SO THEY JUST ECHO AND DO NOT YET REPLACE
   sed "s/OVPN_K8S_POD_NETWORK:.*/OVPN_K8S_POD_NETWORK: \"${OVPN_K8S_POD_NETWORK}\"/g" k8s-specs/03_vpn_cr.yaml
 }
 
-=======
 main(){
->>>>>>> bfa724daeff4115460f0ccee96b0db584e484735
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
   echo "Example Usage:"
