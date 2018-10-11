@@ -59,7 +59,7 @@ Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
 
-**or*
+**or**
 
 - `AWS_PROFILE`
 - a properly configured aws installation including region
