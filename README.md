@@ -1,17 +1,26 @@
 # AWS k8s vpn starter kit
 
+Following this guide will lead to having a private network in AWS with a kubernetes cluster running an openvpn server that is available via the internet. 
+
 ## Overview
 
-Getting started with k8s in AWS has never been easier thanks to EKS.
+Many organizations have the same concerns when it comes to delivering value. They need some user facing software that stores data in a protected database server and they need some way to acess the databases securely. As things grow they may develop more complicated software and evolve their processes around releasing that software.
 
-The AWS k8s vpn starter kit, from CloudFlinger, helps you easily gain network connectivity directly to your pods.
+Having seen this process unfold at many companies, we've codified the process so that you can get up and going quickly with a set of tools that we find work well together to set a foundation for your organization's operations workflows.
 
-This repository contains
+From experience we also know how much time can be wasted setting up workstations and how, often times, the script to get started breaks down due to dependencies changing and projects evolving.
 
--   Terraform to create a VPC
--   Terraform to create a k8s cluster
--   k8s spec files to install an OpenVPN operator with LDAP support
--   k8s spec files to configure OpenVPN in your k8s cluster
+The AWS k8s vpn starter kit helps you easily create a private network, spawn a kubernetes cluster, and gain secure network connectivity directly to your applications.
+
+This repository uses popular tools including [Docker](https://www.docker.com/), [Terraform](https://www.terraform.io/), [Kubernetes](https://kubernetes.io/), [Amazon Web Services](https://aws.amazon.com/), and [OpenVPN](https://openvpn.net/). As much as possible we are relying on code written and maintained by different communities and really just gluing them together.
+
+At a high level this repository is composed of 
+
+- A dockerfile to create an image to run all of our tooling in
+- A makefile to expose useful commands for creating and interacting with infrastructure.
+- Terraform to create networking, compute, and IAM resources (VPC + EKS + IAM)
+- Kubernetes spec files to install OpenVPN backed by LDAP. (Bring your own LDAP)
+- A little glue code that powers the makefile.
 
 ## Pre-requisites
 
