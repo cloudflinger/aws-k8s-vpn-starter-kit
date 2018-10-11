@@ -3,7 +3,8 @@
 set -x
 set -e
 
-. scripts/env.sh
+ENV_SCRIPT=scripts/env.sh
+. $ENV_SCRIPT
 
 if [ ! -z "${AWS_PROFILE}" ]; then
 	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
@@ -72,10 +73,14 @@ sed-set(){
 }
 
 kubectl-echo(){
-  # THESE SED COMMANDS ARE MISSING THE -i
-  # SO THEY JUST ECHO AND DO NOT YET REPLACE
-  sed-set OVPN_K8S_POD_NETWORK k8s-specs/03_vpn_cr.yaml \"
-  sed-set OVPN_K8S_POD_SUBNET k8s-specs/03_vpn_cr.yaml \"
+	ENV_VAR_PAIRS=$(cat $ENV_SCRIPT)
+	for ENV_VAR_PAIR in $ENV_VAR_PAIRS; do
+		ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
+	  MATCHED_FILES=$(grep -R $ENV_VAR k8s-specs/* | cut -d ':' -f1)
+    for MATCHED_FILE in $MATCHED_FILES; do
+			sed-set $ENV_VAR $MATCHED_FILE \"
+		done
+	done
 }
 
 main(){
