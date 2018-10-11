@@ -3,7 +3,7 @@ kit_image_name="aws-k8s-vpn-starter-kit:v1"
 
 .PHONY: docker-build-kit
 
-default: docker-build-kit env terraform-apply terraform-destroy terraform-plan
+default: docker-build-kit terraform-apply terraform-destroy terraform-plan
 
 docker-build-kit:
 	@echo "Building the docker tool kit"
