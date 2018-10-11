@@ -4,7 +4,7 @@ Following this guide will lead to having a private network in AWS with a kuberne
 
 ## Overview
 
-Many organizations have the same concerns when it comes to delivering value. They need some user facing software that stores data in a protected database server and they need some way to acess the databases securely. As things grow they may develop more complicated software and evolve their processes around releasing that software.
+Many organizations have the same concerns when it comes to delivering value. They need some user facing software that stores data in a protected database server and they need some way to access the databases securely. As things grow they may develop more complicated software and evolve their processes around releasing that software.
 
 Having seen this process unfold at many companies, we've codified the process so that you can get up and going quickly with a set of tools that we find work well together to set a foundation for your organization's operations workflows.
 
