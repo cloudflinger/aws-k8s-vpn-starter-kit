@@ -76,9 +76,14 @@ kubectl-echo(){
 	ENV_VAR_PAIRS=$(cat $ENV_SCRIPT)
 	for ENV_VAR_PAIR in $ENV_VAR_PAIRS; do
 		ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
-		MATCHED_FILES=$(grep -R $ENV_VAR k8s-specs/* | cut -d ':' -f1)
+		ENV_VAR_VAL=$(echo $ENV_VAR_PAIR | cut -d '=' -f2)
+		MATCHED_FILES=$(grep -R $ENV_VAR k8s-specs/**.yaml | cut -d ':' -f1)
 		for MATCHED_FILE in $MATCHED_FILES; do
-			sed-set $ENV_VAR $MATCHED_FILE \"
+			QUOTE=""
+			if echo $ENV_VAR_VAL | grep \";then
+				QUOTE="\""
+			fi
+			sed-set $ENV_VAR $MATCHED_FILE $QUOTE
 		done
 	done
 }
