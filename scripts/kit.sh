@@ -17,7 +17,7 @@ fi
 run_docker(){
 docker run --rm \
 --mount src="$(pwd)/terraform",target=/terraform,type=bind \
---mount src="$(pwd)/k8s-specs",target=/k8s-specs,type=bind \
+--mount src="$k8S_WORK_DIR",target=/k8s-specs,type=bind \
 --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
@@ -58,6 +58,7 @@ run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME}
 }
 
 kubectl-apply(){
+kubectl-generate
 run_kubectl create -f 00_storage_class.yaml || true
 run_kubectl create -f 01_olm-0.5.0/ || true
 run_kubectl create -f 02_vpn_operator.yaml || true
@@ -69,15 +70,18 @@ sed-set(){
   VALUE=${!TARGET}
   FILE=$2
   QUOTE=$3
-  sed "s/${TARGET}:.*/${TARGET}: ${QUOTE}${VALUE}${QUOTE}/g" $FILE
+  sed -i "s/${TARGET}:.*/${TARGET}: ${QUOTE}${VALUE}${QUOTE}/g" $FILE
 }
 
-kubectl-echo(){
+kubectl-generate(){
+	rm -fr $k8S_WORK_DIR || true
+	mkdir $k8S_WORK_DIR
+	cp -r k8s-specs/* $k8S_WORK_DIR/
 	ENV_VAR_PAIRS=$(cat $ENV_SCRIPT)
 	for ENV_VAR_PAIR in $ENV_VAR_PAIRS; do
 		ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
 		ENV_VAR_VAL=$(echo $ENV_VAR_PAIR | cut -d '=' -f2)
-		MATCHED_FILES=$(grep -R $ENV_VAR k8s-specs/**.yaml | cut -d ':' -f1)
+		MATCHED_FILES=$(grep -R $ENV_VAR $k8S_WORK_DIR/**.yaml | cut -d ':' -f1)
 		for MATCHED_FILE in $MATCHED_FILES; do
 			QUOTE=""
 			if echo $ENV_VAR_VAL | grep \";then
@@ -95,6 +99,8 @@ if [ -z ${1+x} ]; then
   echo "kit.sh terraform-plan"
   exit 1;
 fi
+
+k8S_WORK_DIR="$(pwd)/build"
 
 # pass in all subsequent arguments to the function named by the first argument
 $1 ${@:2}

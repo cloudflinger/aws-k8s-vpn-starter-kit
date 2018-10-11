@@ -21,3 +21,6 @@ docker_env.list
 
 # vim
 *.swp
+
+# generated files
+build

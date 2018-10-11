@@ -27,5 +27,5 @@ kubectl-apply:
 vpn-init:
 	./scripts/kit.sh kubectl-apply
 
-kubectl-echo:
-	./scripts/kit.sh kubectl-echo
+kubectl-generate:
+	./scripts/kit.sh kubectl-generate
