@@ -3,17 +3,6 @@
 set -x
 set -e
 
-ENV_SCRIPT=scripts/env.sh
-. $ENV_SCRIPT
-
-if [ ! -z "${AWS_PROFILE}" ]; then
-	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
-fi
-
-: ${AWS_ACCESS_KEY_ID:?"Need to set AWS_ACCESS_KEY_ID env var"}
-: ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
-: ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
-
 run_docker(){
 docker run --rm \
 --mount src="$(pwd)/terraform",target=/terraform,type=bind \
@@ -92,7 +81,7 @@ kubectl-generate(){
 	done
 }
 
-main(){
+init(){
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
   echo "Example Usage:"
@@ -100,10 +89,21 @@ if [ -z ${1+x} ]; then
   exit 1;
 fi
 
+ENV_SCRIPT=scripts/env.sh
+. $ENV_SCRIPT
+
+if [ ! -z "${AWS_PROFILE}" ]; then
+	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
+fi
+
+: ${AWS_ACCESS_KEY_ID:?"Need to set AWS_ACCESS_KEY_ID env var"}
+: ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
+: ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
+
 k8S_WORK_DIR="$(pwd)/build"
+}
+
+init $@
 
 # pass in all subsequent arguments to the function named by the first argument
 $1 ${@:2}
-}
-
-main $@
