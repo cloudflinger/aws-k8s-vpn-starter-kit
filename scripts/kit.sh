@@ -6,7 +6,7 @@ set -e
 run_docker(){
 docker run --rm \
 --mount src="$(pwd)/terraform",target=/terraform,type=bind \
---mount src="$k8S_WORK_DIR",target=/k8s-specs,type=bind \
+--mount src="$K8S_WORK_DIR",target=/k8s-specs,type=bind \
 --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
@@ -63,14 +63,14 @@ sed-set(){
 }
 
 kubectl-generate(){
-	rm -fr $k8S_WORK_DIR || true
-	mkdir $k8S_WORK_DIR
-	cp -r k8s-specs/* $k8S_WORK_DIR/
+	rm -fr $K8S_WORK_DIR || true
+	mkdir $K8S_WORK_DIR
+	cp -r k8s-specs/* $K8S_WORK_DIR/
 	ENV_VAR_PAIRS=$(cat $ENV_SCRIPT)
 	for ENV_VAR_PAIR in $ENV_VAR_PAIRS; do
 		ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
 		ENV_VAR_VAL=$(echo $ENV_VAR_PAIR | cut -d '=' -f2)
-		MATCHED_FILES=$(grep -R $ENV_VAR $k8S_WORK_DIR/**.yaml | cut -d ':' -f1)
+		MATCHED_FILES=$(grep -R $ENV_VAR $K8S_WORK_DIR/**.yaml | cut -d ':' -f1)
 		for MATCHED_FILE in $MATCHED_FILES; do
 			QUOTE=""
 			if echo $ENV_VAR_VAL | grep \";then
@@ -100,7 +100,7 @@ fi
 : ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
 : ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
 
-k8S_WORK_DIR="$(pwd)/build"
+K8S_WORK_DIR="$(pwd)/build"
 }
 
 init $@
