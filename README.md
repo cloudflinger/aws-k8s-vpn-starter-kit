@@ -22,33 +22,47 @@ At a high level this repository is composed of
 - Kubernetes spec files to install OpenVPN backed by LDAP. (Bring your own LDAP)
 - A little glue code that powers the makefile.
 
-## Pre-requisites
+## Requirements
 
-You must [install Docker](https://docs.docker.com/install/) to use the AWS k8s vpn starter kit.
+### Docker
 
-## Setup your LDAP provider
+Docker must [be installed](https://docs.docker.com/install/) on your workstation.
 
-If you do not already have LDAP, we recommend you get started with Foxpass.
+We rely on docker to build/download our toolkit for creating and managing our cloud resources and application deployments.
+
+By using docker in this way, we save you a bunch of time in setup for your workstation and can verify certain versions of the tooling as known to work well together.
+
+### LDAP
+
+We are assuming LDAP as the backing authentication mechanism for the VPN. You'll have to provide your own LDAP implementation for now. The configuration will be convered later but you'll need the ldap url, a username & password to connect to the ldap server as the vpn server, and a filter to specify which ldap users can log in to the VPN.
+
+If you do not already have LDAP, we recommend you get started with [Foxpass](https://www.foxpass.com/).
 
 Once you have your account, follow these docs to [Set Up a VPN](https://foxpass.readme.io/docs/set-up-a-vpn)
 
-## AWS environment
+### AWS Account & Credentials
 
-An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed. It must be made available inside the docker container.
+For use with this starter kit you'll need an [AWS Account](https://aws.amazon.com/). This starter kit is not designed to be used with the free tier and will incur non-trivial cost.
 
-### Option 1 - set the env vars in your shell
+An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed. We use the credentials to authorize terraform to create resources in your amazon account.
 
-Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html) to get started:
+This kit attempts to integrate with common aws cli based workflows. 
 
+Not yet, but the targeted implementation is to first check if `$AWS_ACCESS_KEY_ID` and `$AWS_SECRET_ACCESS_KEY` are set. If they are, then we use those values. If they aren't then we check to see if `$AWS_PROFILE` is set. If it isn't then we set it to "default". We then look up and set `$AWS_ACCESS_KEY_ID`, and `$AWS_SECRET_ACCESS_KEY` from the aws configuration directory, which defaults to `~/.aws/`. If we are unable to find a satisfactory value for `$AWS_ACCESS_KEY_ID` or `$AWS_SECRET_ACCESS_KEY` then we will not proceed.
+
+We then look up the region configured in `$AWS_DEFAULT_REGION`. If it is not set we set it from the aws configuration directory. If we are unable to find a value for `$AWS_DEFAULT_REGION` we will not proceed.
+
+Set the [AWS cli env vars](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html) to get started
+
+**Required Environment Variables:**
 -   AWS_ACCESS_KEY_ID
 -   AWS_SECRET_ACCESS_KEY
 -   AWS_DEFAULT_REGION
 
-### Option 2 - use an AWS profile
+**or*
 
-`AWS_PROFILE` is supported, with one condition:
-
--   You must set `region` in your profile
+- `AWS_PROFILE`
+- a properly configured aws installation including region
 
 Example
 
@@ -56,7 +70,7 @@ Example
 AWS_PROFILE=cloudflinger make terraform-plan
 ```
 
-### Docs on IAM users and access keys
+#### Docs on IAM users and access keys
 
 If none of this is making sense, try reading these docs:
 
