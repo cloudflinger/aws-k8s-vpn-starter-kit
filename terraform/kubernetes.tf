@@ -9,7 +9,9 @@ module "eks" {
   }
 
   vpc_id = "${module.vpc.vpc_id}"
-  write_kubeconfig = false
+  # THIS ENABLES THE MODULE TO MANAGE AWS AUTH CONFIG MAP
+  # THIS CAN BE DISABLED WHEN THE MODULE SUPPORTS NAME PREFIX
+  write_kubeconfig = true
 }
 
 resource "local_file" "kubeconfig" {
