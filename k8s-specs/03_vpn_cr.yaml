@@ -5,8 +5,8 @@ metadata:
   name: example-vpn-bind-creds
 type: Opaque
 data:
-  bind-dn: Y249dnBuLGRjPWNsb3VkZmxpbmdlcixkYz1jb20=
-  bind-pw: VXhMT01NZkdTOTZuNlRMWA==
+  bind-dn: KIT_BIND_DN
+  bind-pw: KIT_BIND_PW
 ---
 apiVersion: brain.cloudflinger.com/v1alpha1
 kind: Openvpn
@@ -55,21 +55,21 @@ spec:
       baseDN: "DC=example,DC=com"
       searchFilter: "(&(uid=%u))"
     # Network allocated for openvpn clients
-    OVPN_NETWORK: 10.2.1.0
+    OVPN_NETWORK: KIT_OVPN_NETWORK
     # Network subnet allocated for openvpn client
-    OVPN_SUBNET: 255.255.255.0
+    OVPN_SUBNET: KIT_OVPN_SUBNET
     # Protocol used by openvpn
     OVPN_PROTO: tcp
-    OVPN_DNS_NAME: "vpn.example.com"
+    OVPN_DNS_NAME: "KIT_EXTERNAL_FQDN"
     # Kubernetes pod network
-    OVPN_K8S_POD_NETWORK: "172.16.0.0"
-    OVPN_K8S_POD_SUBNET: "255.240.0.0"
+    OVPN_K8S_POD_NETWORK: "KIT_OVPN_K8S_POD_NETWORK"
+    OVPN_K8S_POD_SUBNET: "KIT_OVPN_K8S_POD_SUBNET"
     # Kubernetes service network
-    OVPN_K8S_CLUSTER_IP_NETWORK: "192.168.0.0"
-    OVPN_K8S_CLUSTER_IP_SUBNET: "255.255.0.0"
+    OVPN_K8S_CLUSTER_IP_NETWORK: "KIT_OVPN_K8S_CLUSTER_IP_NETWORK"
+    OVPN_K8S_CLUSTER_IP_SUBNET: "KIT_OVPN_K8S_CLUSTER_IP_SUBNET"
     # Kubernetes node ip network
-    OVPN_K8S_NODE_NETWORK: "10.1.0.0"
-    OVPN_K8S_NODE_SUBNET: "255.255.0.0"
+    OVPN_K8S_NODE_NETWORK: "KIT_OVPN_K8S_NODE_NETWORK"
+    OVPN_K8S_NODE_SUBNET: "KIT_OVPN_K8S_NODE_SUBNET"
     # TODO: idk if we want this or not
     dhcpOptionDomain: false
     redirectGateway: false

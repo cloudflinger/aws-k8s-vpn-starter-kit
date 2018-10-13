@@ -10,10 +10,10 @@ docker run --rm \
 --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
---env TF_VAR_cluster_name=${CLUSTER_NAME} \
---env TF_VAR_environment_name=${ENVIRONMENT_NAME} \
---env TF_VAR_vpc_cidr=${VPC_CIDR} \
---env TF_VAR_vpc_name=${VPC_NAME} \
+--env TF_VAR_cluster_name=${KIT_CLUSTER_NAME} \
+--env TF_VAR_environment_name=${KIT_ENVIRONMENT_NAME} \
+--env TF_VAR_vpc_cidr=${KIT_VPC_CIDR} \
+--env TF_VAR_vpc_name=${KIT_VPC_NAME} \
 --env TF_VAR_aws_region=${AWS_DEFAULT_REGION} \
 --workdir $1 \
 -it \
@@ -54,29 +54,19 @@ run_kubectl create -f 02_vpn_operator.yaml || true
 run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
-sed-set(){
-  TARGET=$1
-  VALUE=${!TARGET}
-  FILE=$2
-  QUOTE=$3
-  sed -i "s/${TARGET}:.*/${TARGET}: ${QUOTE}${VALUE}${QUOTE}/g" $FILE
-}
-
 kubectl-generate(){
 	rm -fr $K8S_WORK_DIR || true
 	mkdir $K8S_WORK_DIR
 	cp -r k8s-specs/* $K8S_WORK_DIR/
 	ENV_VAR_PAIRS=$(cat $ENV_SCRIPT)
 	for ENV_VAR_PAIR in $ENV_VAR_PAIRS; do
+    if grep "#" $ENV_VAR_PAIR;then
+      continue
+    fi
 		ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
-		ENV_VAR_VAL=$(echo $ENV_VAR_PAIR | cut -d '=' -f2)
 		MATCHED_FILES=$(grep -R $ENV_VAR $K8S_WORK_DIR/**.yaml | cut -d ':' -f1)
 		for MATCHED_FILE in $MATCHED_FILES; do
-			QUOTE=""
-			if echo $ENV_VAR_VAL | grep \";then
-				QUOTE="\""
-			fi
-			sed-set $ENV_VAR $MATCHED_FILE $QUOTE
+      sed -i "s/${ENV_VAR}/${!ENV_VAR}/g" $MATCHED_FILE
 		done
 	done
 }
