@@ -6,7 +6,7 @@ set -e
 run_docker(){
 docker run --rm \
 --mount src="$(pwd)/terraform",target=/terraform,type=bind \
---mount src="$K8S_WORK_DIR",target=/k8s-specs,type=bind \
+--mount src="${K8S_WORK_DIR}",target=/k8s-specs,type=bind \
 --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
@@ -34,7 +34,7 @@ run_terraform plan -out plan
 }
 
 terraform-apply(){
-run_terraform apply plan
+run_terraform apply plan || true
 run_docker /terraform "rm plan"
 }
 
@@ -43,7 +43,7 @@ run_terraform destroy
 }
 
 run_kubectl(){
-run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${CLUSTER_NAME} ${@}
+run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
 }
 
 kubectl-apply(){
