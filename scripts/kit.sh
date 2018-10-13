@@ -58,9 +58,8 @@ kubectl-generate(){
 	rm -fr $K8S_WORK_DIR || true
 	mkdir $K8S_WORK_DIR
 	cp -r k8s-specs/* $K8S_WORK_DIR/
-	ENV_VAR_PAIRS=$(cat $ENV_SCRIPT)
-	for ENV_VAR_PAIR in $ENV_VAR_PAIRS; do
-    if grep "#" $ENV_VAR_PAIR;then
+	cat $ENV_SCRIPT | while read ENV_VAR_PAIR;do
+    if echo $ENV_VAR_PAIR | grep "^#";then
       continue
     fi
 		ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
