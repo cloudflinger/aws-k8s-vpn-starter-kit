@@ -83,11 +83,10 @@ vpn-create-config(){
 	HELM_RELEASE=$3
 	POD_NAME=$(run_kubectl get pods -n "${NAMESPACE}" -l "app=openvpn,release=${HELM_RELEASE}" -o jsonpath='{.items[0].metadata.name}')
 	SERVICE_NAME=$(run_kubectl get svc -n "${NAMESPACE}" -l "app=openvpn,release=${HELM_RELEASE}" -o jsonpath='{.items[0].metadata.name}')
-	# SERVICE_IP=$(run_kubectl get svc -n "${NAMESPACE}" "${SERVICE_NAME}" -o go-template=\'{{range $k, $v := (index .status.loadBalancer.ingress 0)}}{{$v}}{{end}}\')
-	SERVICE_IP="a4669a082cf4e11e8a88f061139ff8d2-1619022522.us-west-2.elb.amazonaws.com"
+	SERVICE_IP=$(run_kubectl get svc -n "${NAMESPACE}" "${SERVICE_NAME}" -o=jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 	run_kubectl -n "${NAMESPACE}" exec -it "${POD_NAME}" /etc/openvpn/setup/newClientConfig.sh "${KEY_NAME}" "${SERVICE_IP}"
 	run_kubectl -n "${NAMESPACE}" exec -it "${POD_NAME}" -- cat "/etc/openvpn/${KEY_NAME}.ovpn" > "${KEY_NAME}.ovpn"
-	echo "the file exists ${KEY_NAME}.ovpn"
+	echo "the config file exists at ${KEY_NAME}.ovpn"
 }
 
 init(){
