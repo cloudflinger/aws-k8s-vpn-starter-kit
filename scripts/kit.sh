@@ -1,38 +1,16 @@
 #!/bin/bash
 
-#set -x
+set -x
 set -e
 
-run_docker(){
-docker run --rm \
---mount src="$(pwd)",target=${WORK_DIR},type=bind \
---env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
---env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
---env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
---env TF_VAR_cluster_name=${KIT_CLUSTER_NAME} \
---env TF_VAR_environment_name=${KIT_ENVIRONMENT_NAME} \
---env TF_VAR_vpc_cidr=${KIT_VPC_CIDR} \
---env TF_VAR_vpc_name=${KIT_VPC_NAME} \
---env TF_VAR_aws_region=${AWS_DEFAULT_REGION} \
---workdir ${WORK_DIR}${1} \
--it \
--u=$UID:$(id -g $USER) \
-aws-k8s-vpn-starter-kit:v1 \
-${@:2}
-}
-
-docker-build-kit(){
-DEFAULT_KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-KIT_KUBECTL_VERSION=${KIT_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}
-BUILD_ARGS="--build-arg TF_VERSION=${KIT_TF_VERSION} --build-arg KUBECTL_VERSION=${KIT_KUBECTL_VERSION}"
-docker build ${BUILD_ARGS} -t ${KIT_IMAGE_NAME} .
-}
-
 run_terraform(){
-run_docker /terraform terraform ${@}
+pushd terraform
+terraform ${@}
+popd
 }
 
 terraform-init(){
+echo "init!!!"
 run_terraform init
 }
 
@@ -42,7 +20,7 @@ run_terraform plan -out plan
 
 terraform-apply(){
 run_terraform apply plan || true
-run_docker /terraform "rm plan"
+rm /terraform/plan
 }
 
 terraform-destroy(){
@@ -50,7 +28,9 @@ run_terraform destroy
 }
 
 run_kubectl(){
-run_docker ${K8S_OUTPUT_DIR} kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
+pushd ${K8S_OUTPUT_DIR}
+kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
+popd
 }
 
 kubectl-apply(){
@@ -62,11 +42,13 @@ run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
 kubectl-destroy(){
-run_docker / scripts/kit.sh kubectl-generate
+kubectl-generate
+pushd k8s-specs-output/
 run_kubectl delete -f 03_vpn_cr.yaml || true
 run_kubectl delete -f 02_vpn_operator.yaml || true
 run_kubectl delete -f 01_olm-0.5.0/ || true
 run_kubectl delete -f 00_storage_class.yaml || true
+popd
 }
 
 kubectl-generate(){
@@ -82,9 +64,7 @@ cat ${ENV_SCRIPT} | while read ENV_VAR_PAIR;do
     fi
 	ENV_VAR=$(echo ${ENV_VAR_PAIR} | cut -d '=' -f1)
 	ENV_VAR_VALUE=${!ENV_VAR}
-	echo "ENV VAR ${ENV_VAR}=${ENV_VAR_VALUE}"
 	MATCHED_FILES=$(grep -R ${ENV_VAR} ${K8S_OUTPUT_DIR}/**.yaml | cut -d ':' -f1)
-	echo ${MATCHED_FILES}
   for MATCHED_FILE in ${MATCHED_FILES}; do
 		sed -i "s/${ENV_VAR}/${!ENV_VAR}/g" ${MATCHED_FILE}
   done
@@ -110,32 +90,7 @@ vpn-create-config(){
 	echo "the config file exists at ${KEY_NAME}.ovpn"
 }
 
-init(){
-if [ -z ${1+x} ]; then
-  echo "ERROR: You must pass a command";
-  echo "Example Usage:"
-  echo "kit.sh terraform-plan"
-  exit 1;
-fi
-
-ENV_SCRIPT=config.sh
-. $ENV_SCRIPT
-
-if [ ! -z "${AWS_PROFILE}" ]; then
-	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
-fi
-
-: ${AWS_ACCESS_KEY_ID:?"Need to set AWS_ACCESS_KEY_ID env var"}
-: ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
-: ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
-
-KIT_IMAGE_NAME="aws-k8s-vpn-starter-kit:v1"
-WORK_DIR="/workdir"
+# . /workdir/config.sh]
 K8S_TEMPLATES_DIR="k8s-specs"
 K8S_OUTPUT_DIR="k8s-specs-output"
-}
-
-init $@
-
-# pass in all subsequent arguments to the function named by the first argument
-$1 ${@:2}
+$1 {$@:2}
