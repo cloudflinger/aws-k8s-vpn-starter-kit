@@ -8,6 +8,7 @@ if [ ! -d "${K8S_WORK_DIR}" ]; then
 	mkdir ${K8S_WORK_DIR}
 fi
 docker run --rm \
+--mount src="$(pwd)/scripts",target=/scripts,type=bind \
 --mount src="$(pwd)/terraform",target=/terraform,type=bind \
 --mount src="$(pwd)/k8s-specs",target=/k8s-specs-templates,type=bind \
 --mount src="${K8S_WORK_DIR}",target=/k8s-specs,type=bind \
@@ -59,7 +60,7 @@ run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
 kubectl-destroy(){
-kubectl-generate
+run_docker / /scripts/kit.sh kubectl-generate
 run_kubectl delete -f 03_vpn_cr.yaml || true
 run_kubectl delete -f 02_vpn_operator.yaml || true
 run_kubectl delete -f 01_olm-0.5.0/ || true
@@ -67,9 +68,12 @@ run_kubectl delete -f 00_storage_class.yaml || true
 }
 
 kubectl-generate(){
+#####
+## THIS FUNCTION RUNS WITHIN THE DOCKER ONLY
+####
 rm -fr $K8S_WORK_DIR || true
 mkdir $K8S_WORK_DIR
-cp -r k8s-specs/* $K8S_WORK_DIR/
+cp -r /k8s-specs-templates/* /k8s-specs/
 cat $ENV_SCRIPT | while read ENV_VAR_PAIR;do
     if echo $ENV_VAR_PAIR | grep "^#";then
       continue
@@ -77,19 +81,12 @@ cat $ENV_SCRIPT | while read ENV_VAR_PAIR;do
 	ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
 	ENV_VAR_VALUE=${!ENV_VAR}
 	echo "ENV VAR ${ENV_VAR}=${ENV_VAR_VALUE}"
-	MATCHED_FILES=$(run_docker /k8s-specs grep -R $ENV_VAR ./**.yaml | cut -d ':' -f1)
+	MATCHED_FILES=$(grep -R $ENV_VAR /k8s-specs/**.yaml | cut -d ':' -f1)
 	echo ${MATCHED_FILES}
-# 	# for MATCHED_FILE in $MATCHED_FILES; do
-# 	# 	sed-replacement "${ENV_VAR}" "${!ENV_VAR}" "${MATCHED_FILE}"
-# 	# done
+  for MATCHED_FILE in $MATCHED_FILES; do
+		sed -i "s/${ENV_VAR}/${!ENV_VAR}/g" $MATCHED_FILE
+  done
 done
-}
-
-sed-replacement(){
-KEY=$1
-VALUE=$2
-FILENAME=$3
-run_docker /k8s-specs-templates sed -i "s/${KEY}/${VALUE}/g" $FILENAME
 }
 
 vpn-create-config(){
