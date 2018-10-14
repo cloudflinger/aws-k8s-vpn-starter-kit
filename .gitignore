@@ -24,3 +24,6 @@ docker_env.list
 
 # generated files
 build
+
+# vpn configs
+*.ovpn
