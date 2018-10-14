@@ -28,4 +28,4 @@ vpn-init:
 	./scripts/kit.sh kubectl-apply
 
 kubectl-generate:
-	./scripts/kit.sh kubectl-generate
+	./scripts/kit.sh run_docker / /scripts/kit.sh kubectl-generate
