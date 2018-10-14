@@ -77,23 +77,45 @@ If none of this is making sense, try reading these docs:
 -   [Creating your first IAM Admin User and Group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 -   [Managing Access Keys for IAM Users](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
 
-## Configuration
+## Getting Started
 
-Modify values in `scripts/env.sh`
+### Customization
 
-```
-#!/bin/bash
-export CLUSTER_NAME=test-eks-cluster
-export ENVIRONMENT_NAME=prod
-export VPC_CIDR=10.1.0.0/16
-export VPC_NAME=my-vpc
-export AWS_REGION=us-west-2
-```
+Modify values in `scripts/env.sh` to match your network/organization.
 
-## Build the docker
+### Prepare Toolkit
+
+build the docker image
 
 ``` make docker-build-kit ```
 
-## Plan the infrastructure
+### Plan the infrastructure changes
+
+**NOTE:** Like with other terraform code bases, if this is the first time you are working with the terraform you will need to run terraform init. This is done with `make terraform-init`
+
+To output what changes need to be made to the infrastructure to make it match the code in this repo, run
 
 ``` make terraform-plan ```
+
+### Create the infrastructure
+
+By default, this code will create a VPC in AWS. It will also create an EKS cluster in the VPC. The EKS cluster starts with just a single node.
+
+[TODO: diagram the default network]
+
+``` make terraform-apply ```
+
+### Destroy the infrastructure
+
+This step is probably most useful when you're experiementing. You won't often run this step if you're using this repository to manage your production servers.
+
+``` 
+make kubectl-destroy
+make terraform-destroy
+```
+
+### Deploy the VPN Server
+
+[TODO: break this apart? something to install olm + crd. something else to install the openvpn spec]
+
+``` make kubectl-apply ``` 
