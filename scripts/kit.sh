@@ -43,7 +43,7 @@ run_terraform destroy
 }
 
 run_kubectl(){
-run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
+run_docker ${K8S_OUTPUT_DIR} kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
 }
 
 kubectl-apply(){
