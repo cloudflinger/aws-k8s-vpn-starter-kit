@@ -24,6 +24,7 @@ docker_env.list
 
 # generated files
 build
+k8s-specs-output
 
 # vpn configs
 *.ovpn
