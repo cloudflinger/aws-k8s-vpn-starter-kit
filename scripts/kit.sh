@@ -111,7 +111,7 @@ if [ -z ${1+x} ]; then
   exit 1;
 fi
 
-ENV_SCRIPT=scripts/env.sh
+ENV_SCRIPT=config.sh
 . $ENV_SCRIPT
 
 if [ ! -z "${AWS_PROFILE}" ]; then
