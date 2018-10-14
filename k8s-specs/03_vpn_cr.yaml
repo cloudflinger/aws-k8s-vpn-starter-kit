@@ -19,7 +19,7 @@ spec:
   replicaCount: 1
   updateStrategy: {}
   exporter:
-    enabled: true
+    enabled: false
     image:
       repository: cloudflinger/openvpn-exporter
       tag: 1.0.0
@@ -52,7 +52,7 @@ spec:
       bindCredsSecretName: example-vpn-bind-creds
       enabled: true
       url: "ldaps://ldap.foxpass.com"
-      baseDN: "DC=example,DC=com"
+      baseDN: "KIT_BASE_DN"
       searchFilter: "(&(uid=%u))"
     # Network allocated for openvpn clients
     OVPN_NETWORK: KIT_OVPN_NETWORK
