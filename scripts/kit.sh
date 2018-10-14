@@ -1,17 +1,11 @@
 #!/bin/bash
 
-set -x
+#set -x
 set -e
 
 run_docker(){
-if [ ! -d "${K8S_WORK_DIR}" ]; then
-	mkdir ${K8S_WORK_DIR}
-fi
 docker run --rm \
---mount src="$(pwd)/scripts",target=/scripts,type=bind \
---mount src="$(pwd)/terraform",target=/terraform,type=bind \
---mount src="$(pwd)/k8s-specs",target=/k8s-specs-templates,type=bind \
---mount src="${K8S_WORK_DIR}",target=/k8s-specs,type=bind \
+--mount src="$(pwd)",target=${WORK_DIR},type=bind \
 --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 --env AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} \
@@ -20,8 +14,9 @@ docker run --rm \
 --env TF_VAR_vpc_cidr=${KIT_VPC_CIDR} \
 --env TF_VAR_vpc_name=${KIT_VPC_NAME} \
 --env TF_VAR_aws_region=${AWS_DEFAULT_REGION} \
---workdir $1 \
+--workdir ${WORK_DIR}${1} \
 -it \
+-u=$UID:$(id -g $USER) \
 aws-k8s-vpn-starter-kit:v1 \
 ${@:2}
 }
@@ -52,7 +47,7 @@ run_terraform destroy
 }
 
 run_kubectl(){
-run_docker /k8s-specs kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
+run_docker ${K8S_OUTPUT_DIR} kubectl --kubeconfig /terraform/kubeconfig_${KIT_CLUSTER_NAME} ${@}
 }
 
 kubectl-apply(){
@@ -64,7 +59,7 @@ run_kubectl create -f 03_vpn_cr.yaml || true
 }
 
 kubectl-destroy(){
-run_docker / /scripts/kit.sh kubectl-generate
+run_docker / scripts/kit.sh kubectl-generate
 run_kubectl delete -f 03_vpn_cr.yaml || true
 run_kubectl delete -f 02_vpn_operator.yaml || true
 run_kubectl delete -f 01_olm-0.5.0/ || true
@@ -75,20 +70,20 @@ kubectl-generate(){
 #####
 ## THIS FUNCTION RUNS WITHIN THE DOCKER ONLY
 ####
-rm -fr $K8S_WORK_DIR || true
-mkdir $K8S_WORK_DIR
-cp -r /k8s-specs-templates/* /k8s-specs/
-cat $ENV_SCRIPT | while read ENV_VAR_PAIR;do
-    if echo $ENV_VAR_PAIR | grep "^#";then
+rm -fr ${K8S_OUTPUT_DIR} || true
+mkdir ${K8S_OUTPUT_DIR}
+cp -r ${K8S_TEMPLATES_DIR}/* ${K8S_OUTPUT_DIR}/
+cat ${ENV_SCRIPT} | while read ENV_VAR_PAIR;do
+    if echo ${ENV_VAR_PAIR} | grep "^#";then
       continue
     fi
-	ENV_VAR=$(echo $ENV_VAR_PAIR | cut -d '=' -f1)
+	ENV_VAR=$(echo ${ENV_VAR_PAIR} | cut -d '=' -f1)
 	ENV_VAR_VALUE=${!ENV_VAR}
 	echo "ENV VAR ${ENV_VAR}=${ENV_VAR_VALUE}"
-	MATCHED_FILES=$(grep -R $ENV_VAR /k8s-specs/**.yaml | cut -d ':' -f1)
+	MATCHED_FILES=$(grep -R ${ENV_VAR} ${K8S_OUTPUT_DIR}/**.yaml | cut -d ':' -f1)
 	echo ${MATCHED_FILES}
-  for MATCHED_FILE in $MATCHED_FILES; do
-		sed -i "s/${ENV_VAR}/${!ENV_VAR}/g" $MATCHED_FILE
+  for MATCHED_FILE in ${MATCHED_FILES}; do
+		sed -i "s/${ENV_VAR}/${!ENV_VAR}/g" ${MATCHED_FILE}
   done
 done
 }
@@ -120,7 +115,7 @@ if [ -z ${1+x} ]; then
   exit 1;
 fi
 
-ENV_SCRIPT=scripts/env.sh
+ENV_SCRIPT=config.sh
 . $ENV_SCRIPT
 
 if [ ! -z "${AWS_PROFILE}" ]; then
@@ -131,8 +126,14 @@ fi
 : ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
 : ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
 
+<<<<<<< HEAD
 KIT_IMAGE_NAME="aws-k8s-vpn-starter-kit:v1"
 K8S_WORK_DIR="$(pwd)/build"
+=======
+WORK_DIR="/workdir"
+K8S_TEMPLATES_DIR="k8s-specs"
+K8S_OUTPUT_DIR="k8s-specs-output"
+>>>>>>> master
 }
 
 init $@

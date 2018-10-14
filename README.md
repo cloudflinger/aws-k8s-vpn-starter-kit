@@ -81,7 +81,7 @@ If none of this is making sense, try reading these docs:
 
 ### Customization
 
-Modify values in `scripts/env.sh` to match your network/organization.
+Modify values in `config.sh` to match your network/organization.
 
 ### Prepare Toolkit
 
