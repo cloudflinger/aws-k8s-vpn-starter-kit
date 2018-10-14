@@ -25,7 +25,8 @@ RUN curl -o /usr/bin/aws-iam-authenticator \
 WORKDIR /root
 
 # download kubectl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl /usr/bin
+ARG KUBECTL_VERSION
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl /usr/bin
 
 # download terraform
 ARG TF_VERSION
