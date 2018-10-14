@@ -21,6 +21,10 @@ aws-k8s-vpn-starter-kit:v1 \
 ${@:2}
 }
 
+docker-build-kit(){
+docker build --build-arg TF_VERSION=${KIT_TF_VERSION} -t ${KIT_IMAGE_NAME} .
+}
+
 run_terraform(){
 run_docker /terraform terraform ${@}
 }
@@ -122,9 +126,14 @@ fi
 : ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
 : ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
 
+<<<<<<< HEAD
+KIT_IMAGE_NAME="aws-k8s-vpn-starter-kit:v1"
+K8S_WORK_DIR="$(pwd)/build"
+=======
 WORK_DIR="/workdir"
 K8S_TEMPLATES_DIR="k8s-specs"
 K8S_OUTPUT_DIR="k8s-specs-output"
+>>>>>>> master
 }
 
 init $@
