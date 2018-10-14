@@ -1,6 +1,6 @@
 # AWS k8s vpn starter kit
 
-Following this guide will lead to having a private network in AWS with a kubernetes cluster running an openvpn server that is available via the internet. 
+Following this guide will lead to having a private network in AWS with a kubernetes cluster running an openvpn server that is available via the internet.
 
 ## Overview
 
@@ -14,7 +14,7 @@ The AWS k8s vpn starter kit helps you easily create a private network, spawn a k
 
 This repository uses popular tools including [Docker](https://www.docker.com/), [Terraform](https://www.terraform.io/), [Kubernetes](https://kubernetes.io/), [Amazon Web Services](https://aws.amazon.com/), and [OpenVPN](https://openvpn.net/). As much as possible we are relying on code written and maintained by different communities and really just gluing them together.
 
-At a high level this repository is composed of 
+At a high level this repository is composed of
 
 - A dockerfile to create an image to run all of our tooling in
 - A makefile to expose useful commands for creating and interacting with infrastructure.
@@ -34,7 +34,7 @@ By using docker in this way, we save you a bunch of time in setup for your works
 
 ### LDAP
 
-We are assuming LDAP as the backing authentication mechanism for the VPN. You'll have to provide your own LDAP implementation for now. The configuration will be convered later but you'll need the ldap url, a username & password to connect to the ldap server as the vpn server, and a filter to specify which ldap users can log in to the VPN.
+We are assuming LDAP as the backing authentication mechanism for the VPN. You'll have to provide your own LDAP implementation for now. The configuration will be covered later but you'll need the ldap url, a username & password to connect to the ldap server as the vpn server, and a filter to specify which ldap users can log in to the VPN.
 
 If you do not already have LDAP, we recommend you get started with [Foxpass](https://www.foxpass.com/).
 
@@ -46,7 +46,7 @@ For use with this starter kit you'll need an [AWS Account](https://aws.amazon.co
 
 An aws key pair with IAM permissions to create a VPC and EKS cluster is required to proceed. We use the credentials to authorize terraform to create resources in your amazon account.
 
-This kit attempts to integrate with common aws cli based workflows. 
+This kit attempts to integrate with common aws cli based workflows.
 
 Not yet, but the targeted implementation is to first check if `$AWS_ACCESS_KEY_ID` and `$AWS_SECRET_ACCESS_KEY` are set. If they are, then we use those values. If they aren't then we check to see if `$AWS_PROFILE` is set. If it isn't then we set it to "default". We then look up and set `$AWS_ACCESS_KEY_ID`, and `$AWS_SECRET_ACCESS_KEY` from the aws configuration directory, which defaults to `~/.aws/`. If we are unable to find a satisfactory value for `$AWS_ACCESS_KEY_ID` or `$AWS_SECRET_ACCESS_KEY` then we will not proceed.
 
@@ -107,9 +107,9 @@ By default, this code will create a VPC in AWS. It will also create an EKS clust
 
 ### Destroy the infrastructure
 
-This step is probably most useful when you're experiementing. You won't often run this step if you're using this repository to manage your production servers.
+This step is probably most useful when you're experimenting. You won't often run this step if you're using this repository to manage your production servers.
 
-``` 
+```
 make kubectl-destroy
 make terraform-destroy
 ```
@@ -118,4 +118,4 @@ make terraform-destroy
 
 [TODO: break this apart? something to install olm + crd. something else to install the openvpn spec]
 
-``` make kubectl-apply ``` 
+``` make kubectl-apply ```
