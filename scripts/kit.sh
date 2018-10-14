@@ -70,6 +70,26 @@ kubectl-generate(){
 	done
 }
 
+vpn-create-config(){
+	# TODO: fix this whole thing. it should get all it's values from elsewhere and just be runable from docker to get the config file onto the local filesystem
+	if [ $# -ne 3 ]
+	then
+	  echo "Usage: $0 <CLIENT_KEY_NAME> <NAMESPACE> <HELM_RELEASE>"
+	  exit
+	fi
+
+	KEY_NAME=$1
+	NAMESPACE=$2
+	HELM_RELEASE=$3
+	POD_NAME=$(run_kubectl get pods -n "${NAMESPACE}" -l "app=openvpn,release=${HELM_RELEASE}" -o jsonpath='{.items[0].metadata.name}')
+	SERVICE_NAME=$(run_kubectl get svc -n "${NAMESPACE}" -l "app=openvpn,release=${HELM_RELEASE}" -o jsonpath='{.items[0].metadata.name}')
+	# SERVICE_IP=$(run_kubectl get svc -n "${NAMESPACE}" "${SERVICE_NAME}" -o go-template=\'{{range $k, $v := (index .status.loadBalancer.ingress 0)}}{{$v}}{{end}}\')
+	SERVICE_IP="a4669a082cf4e11e8a88f061139ff8d2-1619022522.us-west-2.elb.amazonaws.com"
+	run_kubectl -n "${NAMESPACE}" exec -it "${POD_NAME}" /etc/openvpn/setup/newClientConfig.sh "${KEY_NAME}" "${SERVICE_IP}"
+	run_kubectl -n "${NAMESPACE}" exec -it "${POD_NAME}" -- cat "/etc/openvpn/${KEY_NAME}.ovpn" > "${KEY_NAME}.ovpn"
+	echo "the file exists ${KEY_NAME}.ovpn"
+}
+
 init(){
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
