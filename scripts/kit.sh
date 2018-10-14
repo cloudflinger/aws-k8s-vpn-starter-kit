@@ -22,7 +22,10 @@ ${@:2}
 }
 
 docker-build-kit(){
-docker build --build-arg TF_VERSION=${KIT_TF_VERSION} -t ${KIT_IMAGE_NAME} .
+DEFAULT_KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+KIT_KUBECTL_VERSION=${KIT_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}
+BUILD_ARGS="--build-arg TF_VERSION=${KIT_TF_VERSION} --build-arg KUBECTL_VERSION=${KIT_KUBECTL_VERSION}"
+docker build ${BUILD_ARGS} -t ${KIT_IMAGE_NAME} .
 }
 
 run_terraform(){
@@ -126,14 +129,10 @@ fi
 : ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
 : ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
 
-<<<<<<< HEAD
 KIT_IMAGE_NAME="aws-k8s-vpn-starter-kit:v1"
-K8S_WORK_DIR="$(pwd)/build"
-=======
 WORK_DIR="/workdir"
 K8S_TEMPLATES_DIR="k8s-specs"
 K8S_OUTPUT_DIR="k8s-specs-output"
->>>>>>> master
 }
 
 init $@
