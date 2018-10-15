@@ -45,11 +45,6 @@ run_docker / aws s3api create-bucket \
 --region ${KIT_REMOTE_STATE_REGION} \
 --create-bucket-configuration \
 LocationConstraint=${KIT_REMOTE_STATE_REGION}
-#run_docker /terraform_remote_state terraform destroy
-#run_docker /terraform_remote_state terraform init
-#run_docker /terraform_remote_state terraform plan -out plan
-#run_docker /terraform_remote_state terraform apply plan
-#run_docker /terraform_remote_state rm plan
 tee terraform/remote_state.tf <<EOF
 terraform {
   backend "s3" {
