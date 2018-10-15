@@ -40,10 +40,12 @@ popd
 
 kubectl-apply(){
 kubectl-generate
+pushd k8s-specs-output/
 run_kubectl create -f 00_storage_class.yaml || true
 run_kubectl create -f 01_olm-0.5.0/ || true
 run_kubectl create -f 02_vpn_operator.yaml || true
 run_kubectl create -f 03_vpn_cr.yaml || true
+popd
 }
 
 kubectl-destroy(){
