@@ -26,7 +26,9 @@ WORKDIR /root
 
 # download kubectl
 ARG KUBECTL_VERSION
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl /usr/bin
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+	chmod u+x kubectl && \
+	mv kubectl /usr/bin
 
 # download terraform
 ARG TF_VERSION
