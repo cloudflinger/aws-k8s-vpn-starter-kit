@@ -37,7 +37,7 @@ fi
 
 # NOTE: aws setting has to go outside of docker because we don't have awscli configured inside
 if [ ! -z "${AWS_PROFILE}" ]; then
-	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
+	. ./scripts/_aws_exporter.sh ${AWS_PROFILE}
 fi
 
 : ${AWS_ACCESS_KEY_ID:?"Need to set AWS_ACCESS_KEY_ID env var"}
