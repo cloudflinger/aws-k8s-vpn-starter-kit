@@ -61,6 +61,12 @@ run_terraform plan -out plan
 }
 
 terraform-apply(){
+if [ "$KIT_SETUP_CFG_BUCKET" = true ] ; then
+  if [ ! -f terraform/remote_state.tf ]; then
+    echo "ERROR!  KIT_SETUP_CFG_BUCKET=true but there is no remote state file, exiting"
+    exit 1
+  fi
+fi
 run_terraform apply plan || true
 rm /terraform/plan
 }
