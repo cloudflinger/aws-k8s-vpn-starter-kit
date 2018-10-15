@@ -26,12 +26,16 @@ WORKDIR /root
 
 # download kubectl
 ARG KUBECTL_VERSION
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && chmod u+x kubectl && mv kubectl /usr/bin
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+	chmod ugo+x kubectl && \
+	mv kubectl /usr/bin
 
 # download terraform
 ARG TF_VERSION
 RUN wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip && \
-    unzip terraform_${TF_VERSION}_linux_amd64.zip && chmod u+x terraform && \
-	mv terraform /usr/bin/ && rm terraform_${TF_VERSION}_linux_amd64.zip
+    unzip terraform_${TF_VERSION}_linux_amd64.zip && \
+    chmod u+x terraform && \
+	mv terraform /usr/bin/ && \
+	rm terraform_${TF_VERSION}_linux_amd64.zip
 
 CMD ["/bin/bash"]

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+###### 
+## Helper Script to convert aws profile into access key id, secret access key, and region
+######
+
 if [ -z ${1+x} ]; then 
   echo "ERROR: You must pass a profile name"; 
   echo "Example Usage:"
