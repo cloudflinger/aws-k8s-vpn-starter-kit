@@ -37,9 +37,7 @@ if [ -z ${1+x} ]; then
   exit 1;
 fi
 
-ENV_SCRIPT=config.sh
-. $ENV_SCRIPT
-
+# NOTE: aws setting has to go outside of docker because we don't have awscli configured inside
 if [ ! -z "${AWS_PROFILE}" ]; then
 	. ./scripts/aws_exporter.sh ${AWS_PROFILE}
 fi
@@ -48,8 +46,9 @@ fi
 : ${AWS_SECRET_ACCESS_KEY:?"Need to set AWS_SECRET_ACCESS_KEY env var"}
 : ${AWS_DEFAULT_REGION:?"Need to set AWS_DEFAULT_REGION env var"}
 
-KIT_IMAGE_NAME="aws-k8s-vpn-starter-kit:v1"
-WORK_DIR="/workdir"
+
+. ./scripts/_bootstrap_env.sh
+bootstrap-env
 }
 
 init $@

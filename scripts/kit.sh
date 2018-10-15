@@ -90,7 +90,6 @@ vpn-create-config(){
 	echo "the config file exists at ${KEY_NAME}.ovpn"
 }
 
-# . /workdir/config.sh]
-K8S_TEMPLATES_DIR="k8s-specs"
-K8S_OUTPUT_DIR="k8s-specs-output"
+. ./scripts/_bootstrap_env.sh
+bootstrap-env
 $1 {$@:2}
