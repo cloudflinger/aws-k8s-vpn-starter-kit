@@ -49,6 +49,10 @@ EOF
 
 terraform-init(){
 if [ "$KIT_SETUP_CFG_BUCKET" = true ] ; then
+  if echo ${KIT_CFG_BUCKET} | grep "default";then
+    echo "Set a globally unique name for KIT_CFG_BUCKET in config.sh"
+    exit 0
+  fi
   if [ ! -f terraform/remote_state.tf ]; then
     terraform-remote-state
   fi
