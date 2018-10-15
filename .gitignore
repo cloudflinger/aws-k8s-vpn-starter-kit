@@ -12,6 +12,9 @@ plan
 plan.out
 tfplan
 
+# dynamic remote state file
+terraform/remote_state.tf
+
 kubeconfig*
 
 config-map-aws-auth_*.yaml

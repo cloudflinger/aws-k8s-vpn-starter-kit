@@ -5,6 +5,10 @@ KIT_CLUSTER_NAME=test-eks-cluster
 KIT_ENVIRONMENT_NAME=prod
 KIT_VPC_CIDR=10.1.0.0/16
 KIT_VPC_NAME=my-vpc
+KIT_SETUP_CFG_BUCKET=true
+KIT_CFG_BUCKET=cloudflinger-cfg
+KIT_REMOTE_STATE_KEY=tfstate
+KIT_REMOTE_STATE_REGION=us-west-2
 # 00_storage_class
 # 01_olm
 # 02_vpn_operator

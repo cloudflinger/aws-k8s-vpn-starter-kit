@@ -14,6 +14,9 @@ docker run --rm \
 --env TF_VAR_vpc_cidr=${KIT_VPC_CIDR} \
 --env TF_VAR_vpc_name=${KIT_VPC_NAME} \
 --env TF_VAR_aws_region=${AWS_DEFAULT_REGION} \
+--env TF_VAR_cfg_bucket=${KIT_CFG_BUCKET} \
+--env TF_VAR_remote_state_key=${KIT_REMOTE_STATE_KEY} \
+--env TF_VAR_remote_state_region=${KIT_REMOTE_STATE_REGION} \
 --workdir ${WORK_DIR}${1} \
 -it \
 -u=$UID:$(id -g $USER) \
@@ -32,7 +35,38 @@ run_terraform(){
 run_docker /terraform terraform ${@}
 }
 
+terraform-remote-state(){
+BUCKETS=$(run_docker / aws s3api list-buckets --query "Buckets[].Name")
+if echo ${BUCKETS} | grep ${KIT_SETUP_CFG_BUCKET};then
+  exit 0
+fi
+run_docker / aws s3api create-bucket \
+--bucket ${KIT_CFG_BUCKET} \
+--region ${KIT_REMOTE_STATE_REGION} \
+--create-bucket-configuration \
+LocationConstraint=${KIT_REMOTE_STATE_REGION}
+#run_docker /terraform_remote_state terraform destroy
+#run_docker /terraform_remote_state terraform init
+#run_docker /terraform_remote_state terraform plan -out plan
+#run_docker /terraform_remote_state terraform apply plan
+#run_docker /terraform_remote_state rm plan
+tee terraform/remote_state.tf <<EOF
+terraform {
+  backend "s3" {
+    bucket = "${KIT_CFG_BUCKET}"
+    key    = "${KIT_REMOTE_STATE_KEY}"
+    region = "${KIT_REMOTE_STATE_REGION}"
+  }
+}
+EOF
+}
+
 terraform-init(){
+if [ "$KIT_SETUP_CFG_BUCKET" = true ] ; then
+  if [ ! -f terraform/remote_state.tf ]; then
+    terraform-remote-state
+  fi
+fi
 run_terraform init
 }
 
