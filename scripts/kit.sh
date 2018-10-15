@@ -38,13 +38,22 @@ run_docker /terraform terraform ${@}
 terraform-remote-state(){
 BUCKETS=$(run_docker / aws s3api list-buckets --query "Buckets[].Name")
 if echo ${BUCKETS} | grep ${KIT_SETUP_CFG_BUCKET};then
+  # IF THE BUCKET EXISTS, EXIT
   exit 0
 fi
+
+# CREATE THE BUCKET
 run_docker / aws s3api create-bucket \
 --bucket ${KIT_CFG_BUCKET} \
 --region ${KIT_REMOTE_STATE_REGION} \
 --create-bucket-configuration \
 LocationConstraint=${KIT_REMOTE_STATE_REGION}
+
+# ENABLE VERSIONING
+run_docker / aws s3api put-bucket-versioning \
+--bucket ${KIT_CFG_BUCKET} --versioning-configuration Status=Enabled
+
+# MAKE TF AWARE OF BUCKET
 tee terraform/remote_state.tf <<EOF
 terraform {
   backend "s3" {
