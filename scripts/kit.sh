@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#####
+## THIS FILE RUNS WITHIN THE DOCKER CONTAINER ONLY
+####
+
 set -x
 set -e
 
@@ -10,7 +14,6 @@ popd
 }
 
 terraform-init(){
-echo "init!!!"
 run_terraform init
 }
 
@@ -24,6 +27,7 @@ rm /terraform/plan
 }
 
 terraform-destroy(){
+# kubectl-destroy
 run_terraform destroy
 }
 
@@ -52,9 +56,6 @@ popd
 }
 
 kubectl-generate(){
-#####
-## THIS FUNCTION RUNS WITHIN THE DOCKER ONLY
-####
 rm -fr ${K8S_OUTPUT_DIR} || true
 mkdir ${K8S_OUTPUT_DIR}
 cp -r ${K8S_TEMPLATES_DIR}/* ${K8S_OUTPUT_DIR}/
