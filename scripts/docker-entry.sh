@@ -3,6 +3,11 @@
 # set -x
 set -e
 
+#####
+## THIS FILE RUNS WITHIN ON THE HOST MACHINE
+## So it should be written in terms of the repository filesystem
+####
+
 run_docker(){
 # NOTE: the uid bit makes docker write files as the user running it so that root doesn't own the file on the host machine
 docker run --rm \

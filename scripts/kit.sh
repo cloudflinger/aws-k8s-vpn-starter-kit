@@ -2,6 +2,7 @@
 
 #####
 ## THIS FILE RUNS WITHIN THE DOCKER CONTAINER ONLY
+## So it should be written in terms of the container filesystem
 ####
 
 set -x
