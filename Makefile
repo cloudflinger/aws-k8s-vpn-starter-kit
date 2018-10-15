@@ -6,7 +6,7 @@ default: docker-build-kit terraform-apply terraform-destroy terraform-plan
 
 docker-build-kit:
 	@echo "Building the docker tool kit"
-	./scripts/docker-entry.sh scripts/kit.sh docker-build-kit
+	./scripts/docker-build.sh
 
 terraform-init:
 	./scripts/docker-entry.sh scripts/kit.sh terraform-init

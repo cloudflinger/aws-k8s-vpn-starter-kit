@@ -27,13 +27,6 @@ aws-k8s-vpn-starter-kit:v1 \
 ${@}
 }
 
-docker-build-kit(){
-DEFAULT_KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
-KIT_KUBECTL_VERSION=${KIT_KUBECTL_VERSION:-$DEFAULT_KUBECTL_VERSION}
-BUILD_ARGS="--build-arg TF_VERSION=${KIT_TF_VERSION} --build-arg KUBECTL_VERSION=${KIT_KUBECTL_VERSION}"
-docker build ${BUILD_ARGS} -t ${KIT_IMAGE_NAME} .
-}
-
 init(){
 if [ -z ${1+x} ]; then
   echo "ERROR: You must pass a command";
