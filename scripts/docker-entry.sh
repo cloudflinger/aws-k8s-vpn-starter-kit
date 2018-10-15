@@ -24,7 +24,7 @@ docker run --rm \
 -it \
 -u=$UID:$(id -g $USER) \
 aws-k8s-vpn-starter-kit:v1 \
-scripts/kit.sh ${@}
+${@}
 }
 
 docker-build-kit(){
